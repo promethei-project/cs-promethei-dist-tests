@@ -145,29 +145,6 @@ namespace PrometheiClient
             return fileResponse.Stream;
         }
 
-        public async Task DownloadFileAsync(string contentId, Stream destination, CancellationToken cancellationToken)
-        {
-            var address = GetAddress();
-            var url = $"{address.Host}:{address.Port}/api/promethei/v1/data/{Uri.EscapeDataString(contentId)}/network/stream";
-
-            using var client = new HttpClient { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
-            using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Download failed with StatusCode: {response.StatusCode}");
-
-            // Measure time-to-first-byte (TTFB) of the response body: this is
-            // when stream index 0 becomes readable to the client.
-            var ttfbWatch = System.Diagnostics.Stopwatch.StartNew();
-            using var source = await response.Content.ReadAsStreamAsync(cancellationToken);
-            var buffer = new byte[81920];
-            var firstRead = await source.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken);
-            Log($"{GetName()} TTFB {ttfbWatch.Elapsed.TotalMilliseconds:F0} ms");
-            if (firstRead > 0) await destination.WriteAsync(buffer.AsMemory(0, firstRead), cancellationToken);
-            await source.CopyToAsync(destination, cancellationToken);
-        }
-
         public LocalDataset DownloadStreamless(ContentId cid)
         {
             var response = OnPromethei(api => api.DownloadNetworkAsync(cid.Id));
@@ -183,12 +160,6 @@ namespace PrometheiClient
         public LocalDatasetList LocalFiles()
         {
             return mapper.Map(OnPromethei(api => api.ListDataAsync()));
-        }
-
-        public DatasetStatus GetDatasetStatus(ContentId cid)
-        {
-            var raw = OnPromethei(api => api.GetDatasetStatusAsync(cid.Id));
-            return mapper.Map(raw, cid);
         }
 
         public void SalesAvailability(CreateStorageAvailability request)
@@ -207,23 +178,24 @@ namespace PrometheiClient
             return mapper.Map(collection);
         }
 
-        public StorageSlotItem[] GetSlots()
+        public string[] GetSlots()
         {
-            var slotIds = OnPromethei(api => api.GetActiveSlotsAsync());
-            return mapper.Map(slotIds, id => OnPromethei(api => api.GetActiveSlotByIdAsync(id)));
+            return OnPromethei(api => api.GetActiveSlotsAsync())
+                .Select(p => p.ToLowerInvariant())
+                .ToArray();
         }
 
         public StorageSlotItem GetSlot(string slotId)
         {
             var slot = OnPromethei(api => api.GetActiveSlotByIdAsync(slotId));
             if (slot == null) throw new Exception($"Unable to find slot by Id: '{slotId}'");
-            return mapper.Map(slot, slotId);
+            return mapper.Map(slot);
         }
 
         public string RequestStorage(StoragePurchaseRequest request)
         {
             var body = mapper.Map(request);
-            return OnPromethei(api => api.CreateStorageRequestAsync(request.Cid.Id, body));
+            return OnPromethei(api => api.CreateStorageRequestAsync(request.ContentId.Id, body));
         }
 
         public PrometheiSpace Space()
@@ -294,31 +266,22 @@ namespace PrometheiClient
                 onFail: f => { },
                 failFast: true);
 
-            var result = httpFactory.CreateHttp(GetHttpId(), h => CheckPrometheiCrashed()).OnClient(client => CallPromethei(client, action), noRetry);
+            var result = httpFactory.CreateHttp(GetHttpId(), h => CheckContainerCrashed()).OnClient(client => CallPromethei(client, action), noRetry);
             return result;
         }
 
         private T OnPromethei<T>(Func<PrometheiApiClient, Task<T>> action)
         {
-            var result = httpFactory.CreateHttp(GetHttpId(), h => CheckPrometheiCrashed()).OnClient(client => CallPromethei(client, action));
+            var result = httpFactory.CreateHttp(GetHttpId(), h => CheckContainerCrashed()).OnClient(client => CallPromethei(client, action));
             return result;
         }
 
         private T CallPromethei<T>(HttpClient client, Func<PrometheiApiClient, Task<T>> action)
         {
-            CheckPrometheiCrashed();
-
             var address = GetAddress();
             var api = new PrometheiApiClient(client);
             api.BaseUrl = $"{address.Host}:{address.Port}/api/promethei/v1";
-            try
-            {
-                return CrashCheck(() => Time.Wait(action(api)));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Call to {GetName()} threw:", ex);
-            }
+            return CrashCheck(() => Time.Wait(action(api)));
         }
 
         private T CrashCheck<T>(Func<T> action)
@@ -329,14 +292,14 @@ namespace PrometheiClient
             }
             finally
             {
-                CheckPrometheiCrashed();
+                CheckContainerCrashed();
             }
         }
 
         private IEndpoint GetEndpoint()
         {
             return httpFactory
-                .CreateHttp(GetHttpId(), h => CheckPrometheiCrashed())
+                .CreateHttp(GetHttpId(), h => CheckContainerCrashed())
                 .CreateEndpoint(GetAddress(), "/api/promethei/v1/", GetName());
         }
 
@@ -350,9 +313,9 @@ namespace PrometheiClient
             return GetAddress().ToString();
         }
 
-        private void CheckPrometheiCrashed()
+        private void CheckContainerCrashed()
         {
-            if (processControl.HasCrashed()) throw new Exception($"Promethei {GetName()} has crashed.");
+            if (processControl.HasCrashed()) throw new Exception($"Container {GetName()} has crashed.");
         }
 
         private void Log(string msg)

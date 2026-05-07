@@ -11,7 +11,7 @@ namespace PrometheiPlugin
     public class ApiChecker
     {
         // <INSERT-OPENAPI-YAML-HASH>
-        private const string OpenApiYamlHash = "73-79-3C-43-2F-D8-2B-80-8E-7F-B7-17-CE-CA-DD-CB-0D-04-C6-DB-00-E0-C1-E7-1B-DD-05-46-08-D8-B8-80";
+        private const string OpenApiYamlHash = "6E-25-50-0E-8B-99-44-AD-B5-05-85-A3-36-FD-C6-B5-DD-01-55-9A-A7-33-3A-9B-32-69-A8-5D-3F-CB-4E-0E";
         private const string OpenApiFilePath = "/promethei/openapi.yaml";
         private const string DisableEnvironmentVariable = "PROMETHEIPLUGIN_DISABLE_APICHECK";
 
