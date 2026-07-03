@@ -1,3 +1,4 @@
+using ArchivistOpenApi;
 using Newtonsoft.Json;
 using Utils;
 
@@ -154,16 +155,31 @@ namespace ArchivistClient
         }
     }
 
+    public class DatasetStatusSlot
+    {
+        public ContentId Cid { get; set; } = new ContentId();
+        public DatasetStatusState State { get; set; }
+        public DateTime ExpiryUtc { get; set; }
+
+        public override string ToString()
+        {
+            return $"(SlotCid:{Cid} State:{State} ExpiryUtc:{Time.FormatTimestamp(ExpiryUtc)})";
+        }
+    }
+
     public class DatasetStatus
     {
         public ContentId Cid { get; set; } = new ContentId();
         public DatasetStatusState State { get; set; }
         public DateTime ExpiryUtc { get; set; }
         public IndexSet Blocks { get; set; } = new IndexSet();
+        public DatasetStatusSlot[] Slots { get; set; } = Array.Empty<DatasetStatusSlot>();
 
         public override string ToString()
         {
-            return $"(Cid:{Cid} State:{State} ExpiryUtc:{Time.FormatTimestamp(ExpiryUtc)} Blocks:[{Blocks}])";
+            return $"(Cid:{Cid} State:{State} ExpiryUtc:{Time.FormatTimestamp(ExpiryUtc)} Blocks:[{Blocks}] Slots: [{
+                string.Join(",", Slots.Select(s => s.ToString()))
+            }])";
         }
     }
 

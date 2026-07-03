@@ -55,7 +55,18 @@ namespace ArchivistClient
                 State = Map(datasetStatus.Status),
                 ExpiryUtc = Time.ToUtcDateTime(datasetStatus.Expiry),
                 Blocks = Map(datasetStatus.HasBlocks),
+                Slots = Map(datasetStatus.Slots)
             };
+        }
+
+        private DatasetStatusSlot[] Map(ICollection<ArchivistOpenApi.Slots> slots)
+        {
+            return slots.Select(s => new DatasetStatusSlot
+            {
+                Cid = new ContentId(s.Cid),
+                State = Map(s.Status),
+                ExpiryUtc = Time.ToUtcDateTime(s.Expiry),                
+            }).ToArray();
         }
 
         private IndexSet Map(IEnumerable<bool> bitmap)
@@ -307,6 +318,29 @@ namespace ArchivistClient
                 case ArchivistOpenApi.DatasetStatusStatus.Completed:
                     return DatasetStatusState.Completed;
                 case ArchivistOpenApi.DatasetStatusStatus.Deleting:
+                    return DatasetStatusState.Deleting;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private DatasetStatusState Map(ArchivistOpenApi.SlotsStatus status)
+        {
+            switch (status)
+            {
+                case ArchivistOpenApi.SlotsStatus.Pending:
+                    return DatasetStatusState.Pending;
+                case ArchivistOpenApi.SlotsStatus.Failure:
+                    return DatasetStatusState.Failure;
+                case ArchivistOpenApi.SlotsStatus.Storing:
+                    return DatasetStatusState.Storing;
+                case ArchivistOpenApi.SlotsStatus.Downloading:
+                    return DatasetStatusState.Downloading;
+                case ArchivistOpenApi.SlotsStatus.Repairing:
+                    return DatasetStatusState.Repairing;
+                case ArchivistOpenApi.SlotsStatus.Completed:
+                    return DatasetStatusState.Completed;
+                case ArchivistOpenApi.SlotsStatus.Deleting:
                     return DatasetStatusState.Deleting;
                 default:
                     throw new NotSupportedException();

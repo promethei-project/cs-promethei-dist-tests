@@ -11,7 +11,7 @@ namespace ArchivistPlugin
     public class ApiChecker
     {
         // <INSERT-OPENAPI-YAML-HASH>
-        private const string OpenApiYamlHash = "04-B4-BC-F0-91-4D-C8-87-5C-84-D9-43-72-49-04-6B-C4-CB-05-F6-00-B6-C7-2F-48-81-59-0D-3F-56-BD-28";
+        private const string OpenApiYamlHash = "43-29-A3-F8-58-8B-20-BB-B9-DF-E7-09-11-CF-C2-90-0F-30-2C-59-FF-37-E3-01-0C-4D-FB-DB-08-DE-C7-83";
         private const string OpenApiFilePath = "/archivist/openapi.yaml";
         private const string DisableEnvironmentVariable = "ARCHIVISTPLUGIN_DISABLE_APICHECK";
 

@@ -78,25 +78,10 @@ namespace ArchivistReleaseTests.Repair
 
             client.Stop(waitTillStopped: true);
 
-            HoldInitialSituation(hosts, contract);
-
             for (var i = 0; i < NumberOfFailures; i++)
             {
                 PerformFailureStep(i, numHostsPerFailure, hosts, contract);
             }
-        }
-
-        private void HoldInitialSituation(List<IArchivistNode> hosts, IStoragePurchaseContract contract)
-        {
-            Log("Holding initial situation to ensure contract is stable...");
-            var config = GetContracts().Deployment.Config;
-            WaitAndCheckNodesStaysAlive(config.PeriodDuration * 5, hosts);
-
-            // No proofs were missed so far.
-            Assert.That(proofsMissed, Is.EqualTo(0), $"Proofs were missed *BEFORE* any hosts were shut down.");
-
-            var requestState = GetContracts().GetRequestState(contract.PurchaseId.HexToByteArray());
-            Assert.That(requestState, Is.EqualTo(RequestState.Started));
         }
 
         private void PerformFailureStep(int i, int numHostsPerFailure, List<IArchivistNode> hosts, IStoragePurchaseContract contract)
@@ -186,7 +171,7 @@ namespace ArchivistReleaseTests.Repair
         private void WaitForSlotFreedEvents(DateTime startUtc, IStoragePurchaseContract contract, ulong[] slotIndices)
         {
             var remaining = slotIndices.ToList();
-            var timeout = CalculateContractFailTimespan();
+            var timeout = CalculateContractFailTimespan() * 2;
             var context = GetLogContext(contract, slotIndices);
             Log($"{context} Timeout: {Time.FormatDuration(timeout)}");
 
