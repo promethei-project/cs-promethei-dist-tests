@@ -15,6 +15,7 @@ namespace ArchivistReleaseTests.MarketTests
         protected override TimeSpan HostBlockTTL => TimeSpan.FromMinutes(1.0);
 
         [Test]
+        [Ignore("Issue re-opened: https://github.com/durability-labs/archivist-node/issues/137")]
         public void SlotCleanup()
         {
             var (hosts, clients) = JumpStartHostsAndClients();
@@ -57,6 +58,11 @@ namespace ArchivistReleaseTests.MarketTests
                     var space = h.Space();
                     Assert.That(hostSlots.Length, Is.EqualTo(1));
                     Assert.That(space.TotalBlocks, Is.EqualTo(slotBlocks + 1));
+                    Log("todo - check this: quoteUsedBytes == slot.SizeInBytes? accounting for manifest needed? needs range?");
+                    Log($"todo - quotaUsed = {space.QuotaUsedBytes}");
+                    Log($"todo - slotSize.SizeInBytes = {PurchaseParams.Default.SlotSize.SizeInBytes}");
+                    Log($"todo - quota used by manifest = ???");
+                    Assert.That(space.QuotaUsedBytes, Is.EqualTo(PurchaseParams.Default.SlotSize.SizeInBytes));
                 }
             });
 

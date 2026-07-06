@@ -1,5 +1,4 @@
 ﻿using ArchivistClient;
-using ArchivistContractsPlugin;
 using ArchivistReleaseTests.Utils;
 using NUnit.Framework;
 using Utils;
@@ -35,7 +34,7 @@ namespace ArchivistReleaseTests.Repair
         #endregion
 
         [Test]
-        [Ignore("Fails at contract-start until repostore quota management is fixed.")]
+        [Ignore("SlotCleanupTest must be fixed first.")]
         public void RetrievabilityTest()
         {
             if (stopSlotIndex1 == stopSlotIndex2) throw new Exception();
@@ -68,20 +67,10 @@ namespace ArchivistReleaseTests.Repair
             fill2.Host.Stop(waitTillStopped: true);
 
             Log("We wait for the duration of 2 block-maintenance cleanup cycles.");
-            Log("This is because the remaining hosts may have downloaded (partially) the slots");
+            Log("This is because the remaining hosts may have partially downloaded slots");
             Log("that we are trying to remove from the network.");
             Sleep(PurchaseParams.Default.Expiry);
             Sleep(HostBlockTTL * 2);
-
-            Log("Now we check that the remaining hosts are storing only the expected slotsizes.");
-            foreach (var h in remainingHosts)
-            {
-                var hostSlots = h.Marketplace.GetSlots();
-                Assert.That(hostSlots.Length, Is.EqualTo(1));
-
-                var space = h.Space();
-                Assert.That(space.QuotaUsedBytes, Is.EqualTo(PurchaseParams.Default.SlotSize.SizeInBytes));
-            }
 
             AssertContentIsRetrievableByNewNode(contractCid);
         }
