@@ -13,8 +13,7 @@ namespace ArchivistReleaseTests.MarketTests
         [Test]
         public void ClientIsHost()
         {
-            var (hosts, _, _) = JumpStart();
-            var host = hosts.Single();
+            var host = StartHosts().Single();
 
             var cid = host.UploadFile(GenerateTestFile(PurchaseParams.Default.UploadFilesize));
             var request = host.Marketplace.RequestStorage(new StoragePurchaseRequest(cid));
