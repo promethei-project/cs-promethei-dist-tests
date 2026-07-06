@@ -150,12 +150,15 @@ namespace ArchivistTests
 
             Assert.That(duration.TotalSeconds, Is.GreaterThan(loopTime.TotalSeconds));
 
-            var start = DateTime.UtcNow;
-            while ((DateTime.UtcNow - start) < duration)
+            Assert.Multiple(() =>
             {
-                Thread.Sleep(loopTime);
-                check();
-            }
+                var start = DateTime.UtcNow;
+                while ((DateTime.UtcNow - start) < duration)
+                {
+                    Thread.Sleep(loopTime);
+                    check();
+                }
+            });
 
             Log($"OK", 1 + skipFrames);
         }

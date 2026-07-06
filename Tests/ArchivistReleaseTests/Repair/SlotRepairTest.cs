@@ -86,14 +86,11 @@ namespace ArchivistReleaseTests.Repair
 
         private void PerformFailureStep(int i, int numHostsPerFailure, List<IArchivistNode> hosts, IStoragePurchaseContract contract)
         {
-            Log($"Failure step: {i}");
+            Log($"Failure step: {i} / {NumberOfFailures}");
             Log($"Running hosts: [{string.Join(", ", hosts.Select(GetNameAndBalance))}]");
             Log("Blocks:");
-            foreach (var h in hosts)
-            {
-                h.GetDatasetStatus(contract.EncodedContentId);
-            }
-
+            ShowBlocks(contract.EncodedContentId, hosts.ToArray());
+            
             StartNewHosts(hosts, numHostsPerFailure);
 
             var selectedFills = SelectOldestSlotFills(hosts, numHostsPerFailure);
