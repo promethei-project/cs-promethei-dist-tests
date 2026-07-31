@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="4.6.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\DiscordRewards\DiscordRewards.csproj" />
+    <ProjectReference Include="..\..\Framework\FileUtils\FileUtils.csproj" />
+    <ProjectReference Include="..\..\Framework\Utils\Utils.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\ArchivistClient\ArchivistClient.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\ArchivistContractsPlugin\ArchivistContractsPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\ArchivistDiscordBotPlugin\ArchivistDiscordBotPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\ArchivistPlugin\ArchivistPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\GethPlugin\GethPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\MetricsPlugin\MetricsPlugin.csproj" />
+    <ProjectReference Include="..\ArchivistReleaseTests\ArchivistReleaseTests.csproj" />
+    <ProjectReference Include="..\DistTestCore\DistTestCore.csproj" />
+  </ItemGroup>
+</Project>
