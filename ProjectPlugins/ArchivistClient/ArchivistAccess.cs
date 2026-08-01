@@ -145,6 +145,29 @@ namespace ArchivistClient
             return fileResponse.Stream;
         }
 
+        public async Task DownloadFileAsync(string contentId, Stream destination, CancellationToken cancellationToken)
+        {
+            var address = GetAddress();
+            var url = $"{address.Host}:{address.Port}/api/archivist/v1/data/{Uri.EscapeDataString(contentId)}/network/stream";
+
+            using var client = new HttpClient { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Download failed with StatusCode: {response.StatusCode}");
+
+            // Measure time-to-first-byte (TTFB) of the response body: this is
+            // when stream index 0 becomes readable to the client.
+            var ttfbWatch = System.Diagnostics.Stopwatch.StartNew();
+            using var source = await response.Content.ReadAsStreamAsync(cancellationToken);
+            var buffer = new byte[81920];
+            var firstRead = await source.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken);
+            Log($"{GetName()} TTFB {ttfbWatch.Elapsed.TotalMilliseconds:F0} ms");
+            if (firstRead > 0) await destination.WriteAsync(buffer.AsMemory(0, firstRead), cancellationToken);
+            await source.CopyToAsync(destination, cancellationToken);
+        }
+
         public LocalDataset DownloadStreamless(ContentId cid)
         {
             var response = OnArchivist(api => api.DownloadNetworkAsync(cid.Id));
