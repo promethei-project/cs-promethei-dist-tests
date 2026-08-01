@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Framework\KubernetesWorkflow\KubernetesWorkflow.csproj" />
     <ProjectReference Include="..\..\Framework\NethereumWorkflow\NethereumWorkflow.csproj" />
     <ProjectReference Include="..\..\Framework\OverwatchTranscript\OverwatchTranscript.csproj" />
     <ProjectReference Include="..\..\Framework\Utils\Utils.csproj" />

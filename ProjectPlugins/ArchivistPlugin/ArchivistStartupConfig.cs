@@ -11,7 +11,7 @@ namespace ArchivistPlugin
         public ArchivistLogLevel LogLevel { get; set; }
         public ArchivistLogCustomTopics? CustomTopics { get; set; } = new ArchivistLogCustomTopics(ArchivistLogLevel.Info, ArchivistLogLevel.Warn);
         public ByteSize? StorageQuota { get; set; }
-        public bool MetricsEnabled { get; set; }
+        public bool MetricsEnabled { get; set; } = true;
         public MarketplaceInitialConfig? MarketplaceConfig { get; set; }
         public string? BootstrapSpr { get; set; }
         public TimeSpan? BlockTTL { get; set; }
@@ -19,6 +19,9 @@ namespace ArchivistPlugin
         public bool? EnableValidator { get; set; }
         public TimeSpan? BlockMaintenanceInterval { get; set; }
         public int? BlockMaintenanceNumber { get; set; }
+        public string? FetchOrder { get; set; }
+        public bool? FsyncFile { get; set; }
+        public bool? FsyncDir { get; set; }
         public string Image { get; set; } = string.Empty;
 
         public string LogLevelWithTopics()

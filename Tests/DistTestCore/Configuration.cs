@@ -15,7 +15,6 @@ namespace DistTestCore
             kubeConfigFile = EnvVar.GetNullableOrDefault("KUBECONFIG");
             logPath = EnvVar.GetOrDefault("LOGPATH", "ArchivistTestLogs");
             dataFilesPath = EnvVar.GetOrDefault("DATAFILEPATH", "TestDataFiles");
-            AlwaysDownloadContainerLogs = !string.IsNullOrEmpty(EnvVar.GetOrDefault("ALWAYS_LOGS", ""));
         }
 
         public Configuration(string? kubeConfigFile, string logPath, string dataFilesPath)
@@ -24,11 +23,6 @@ namespace DistTestCore
             this.logPath = logPath;
             this.dataFilesPath = dataFilesPath;
         }
-
-        /// <summary>
-        /// Does not override [DontDownloadLogs] attribute.
-        /// </summary>
-        public bool AlwaysDownloadContainerLogs { get; set; }
 
         public KubernetesWorkflow.Configuration GetK8sConfiguration(IK8sTimeSet timeSet, string k8sNamespace)
         {

@@ -37,8 +37,10 @@ namespace KubernetesWorkflow
 
             var podLabel = K8sNameUtils.Format(Guid.NewGuid().ToString());
             var deployment = CreateDeployment(containerRecipes, location, podLabel);
-            var internalService = CreateInternalService(containerRecipes);
-            var externalService = CreateExternalService(containerRecipes);
+            var internalService = CreateInternalService(containerRecipes, podLabel);
+            var externalService = RunnerLocationUtils.GetRunnerLocation() == RunnerLocation.ExternalToCluster
+                ? CreateExternalService(containerRecipes, podLabel)
+                : null;
 
             return new StartResult(cluster, containerRecipes, deployment, internalService, externalService);
         }
@@ -789,17 +791,17 @@ namespace KubernetesWorkflow
 
         #region Service management
 
-        private RunningService? CreateInternalService(ContainerRecipe[] recipes)
+        private RunningService? CreateInternalService(ContainerRecipe[] recipes, string podLabel)
         {
-            return CreateService(recipes, r => r.InternalPorts.Concat(r.ExposedPorts).ToArray(), "ClusterIP", "int", false);
+            return CreateService(recipes, r => r.InternalPorts.Concat(r.ExposedPorts).ToArray(), "ClusterIP", "int", false, podLabel);
         }
 
-        private RunningService? CreateExternalService(ContainerRecipe[] recipes)
+        private RunningService? CreateExternalService(ContainerRecipe[] recipes, string podLabel)
         {
-            return CreateService(recipes, r => r.ExposedPorts, "NodePort", "ext", true);
+            return CreateService(recipes, r => r.ExposedPorts, "NodePort", "ext", true, podLabel);
         }
 
-        private RunningService? CreateService(ContainerRecipe[] recipes, Func<ContainerRecipe, Port[]> portSelector, string serviceType, string namePostfix, bool isNodePort)
+        private RunningService? CreateService(ContainerRecipe[] recipes, Func<ContainerRecipe, Port[]> portSelector, string serviceType, string namePostfix, bool isNodePort, string podLabel)
         {
             var ports = CreateServicePorts(recipes, portSelector, isNodePort);
             if (!ports.Any()) return null;
@@ -811,7 +813,7 @@ namespace KubernetesWorkflow
                 Spec = new V1ServiceSpec
                 {
                     Type = serviceType,
-                    Selector = GetSelector(recipes),
+                    Selector = GetSelector(recipes, podLabel),
                     Ports = ports,
                 }
             };
@@ -1028,6 +1030,15 @@ namespace KubernetesWorkflow
             var recipeName = container.Recipe.Name;
 
             return new ContainerCrashWatcher(log, cluster.GetK8sClientConfig(), containerName, podName, recipeName, K8sNamespace);
+        }
+
+        public ContainerLogFollower CreateLogFollower(RunningContainer container)
+        {
+            var containerName = container.Name;
+            var podLabel = container.RunningPod.StartResult.Deployment.PodLabel;
+            var recipeName = container.Recipe.Name;
+
+            return new ContainerLogFollower(log, cluster.GetK8sClientConfig(), containerName, podLabel, recipeName, K8sNamespace);
         }
 
         private V1Pod[] FindPodsByLabel(string podLabel)

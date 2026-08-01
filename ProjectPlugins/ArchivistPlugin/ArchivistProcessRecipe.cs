@@ -87,6 +87,20 @@ namespace ArchivistPlugin
             {
                 AddArg("--block-mn", config.BlockMaintenanceNumber.ToString()!);
             }
+            if (!string.IsNullOrEmpty(config.FetchOrder))
+            {
+                AddArg("--fetch-order", config.FetchOrder);
+            }
+            var fsyncFile = config.FsyncFile ?? GetEnvBool("ARCHIVIST_FSYNC_FILE");
+            var fsyncDir = config.FsyncDir ?? GetEnvBool("ARCHIVIST_FSYNC_DIR");
+            if (fsyncFile.HasValue)
+            {
+                AddArg("--fs-fsync-file", fsyncFile.Value.ToString().ToLowerInvariant());
+            }
+            if (fsyncDir.HasValue)
+            {
+                AddArg("--fs-fsync-dir", fsyncDir.Value.ToString().ToLowerInvariant());
+            }
             if (config.MetricsEnabled)
             {
                 throw new Exception("Not supported");
@@ -155,6 +169,13 @@ namespace ArchivistPlugin
         private void AddArg(string arg, int val)
         {
             args.Add($"{arg}={val}");
+        }
+
+        private static bool? GetEnvBool(string name)
+        {
+            var value = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrEmpty(value)) return null;
+            return value.ToLowerInvariant() == "true" || value == "1";
         }
     }
 }

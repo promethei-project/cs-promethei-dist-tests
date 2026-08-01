@@ -167,7 +167,7 @@ namespace DistTestCore
             {
                 WriteEndTestLog(lifecycle.Log);
 
-                IncludeLogsOnTestFailure(lifecycle);
+                CollectContainerLogs(lifecycle);
                 lifecycle.DeleteAllResources();
             });
         }
@@ -257,26 +257,13 @@ namespace DistTestCore
             return lifecycle.DownloadAllLogs();
         }
 
-        private void IncludeLogsOnTestFailure(TestLifecycle lifecycle)
+        private void CollectContainerLogs(TestLifecycle lifecycle)
         {
-            var testStatus = TestContext.CurrentContext.Result.Outcome.Status;
-            if (ShouldDownloadAllLogs(testStatus))
-            {
-                lifecycle.Log.Log("Downloading all container logs...");
-                DownloadAllLogs();
-            }
-        }
-
-        private bool ShouldDownloadAllLogs(TestStatus testStatus)
-        {
-            if (global.Configuration.AlwaysDownloadContainerLogs) return true;
-            if (!IsDownloadingLogsEnabled()) return false;
-            if (testStatus == TestStatus.Failed)
-            {
-                return true;
-            }
-
-            return false;
+            // Runs on every teardown: healthy followers contribute their real-time
+            // capture (no network traffic); only containers whose follower is missing
+            // or unhealthy are fetched from the cluster.
+            if (!IsDownloadingLogsEnabled()) return;
+            DownloadAllLogs();
         }
 
         private string GetCurrentTestName()

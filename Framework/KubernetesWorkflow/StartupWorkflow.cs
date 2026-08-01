@@ -14,6 +14,7 @@ namespace KubernetesWorkflow
         PodInfo GetPodInfo(RunningContainer container);
         PodInfo GetPodInfo(RunningPod pod);
         ContainerCrashWatcher CreateCrashWatcher(RunningContainer container);
+        ContainerLogFollower CreateLogFollower(RunningContainer container);
         void Stop(RunningPod pod, bool waitTillStopped);
         void Pause(RunningContainer container);
         void Resume(RunningContainer container);
@@ -105,6 +106,11 @@ namespace KubernetesWorkflow
         public ContainerCrashWatcher CreateCrashWatcher(RunningContainer container)
         {
             return K8s(c => c.CreateCrashWatcher(container));
+        }
+
+        public ContainerLogFollower CreateLogFollower(RunningContainer container)
+        {
+            return K8s(c => c.CreateLogFollower(container));
         }
 
         public void Stop(RunningPod runningPod, bool waitTillStopped)
@@ -218,7 +224,10 @@ namespace KubernetesWorkflow
             var result = new List<ContainerAddress>();
             foreach (var exposedPort in recipe.ExposedPorts)
             {
-                result.Add(new ContainerAddress(exposedPort.Tag, GetContainerExternalAddress(startResult, recipe, exposedPort.Tag), false));
+                if (startResult.ExternalService != null)
+                {
+                    result.Add(new ContainerAddress(exposedPort.Tag, GetContainerExternalAddress(startResult, recipe, exposedPort.Tag), false));
+                }
                 result.Add(new ContainerAddress(exposedPort.Tag, GetContainerInternalAddress(startResult, recipe, exposedPort.Tag), true));
             }
             foreach (var internalPort in recipe.InternalPorts)

@@ -74,6 +74,10 @@ namespace ArchivistPlugin
             {
                 AddEnvVar("ARCHIVIST_BLOCK_MN", config.BlockMaintenanceNumber.ToString()!);
             }
+            if (!string.IsNullOrEmpty(config.FetchOrder))
+            {
+                AddEnvVar("ARCHIVIST_FETCH_ORDER", config.FetchOrder);
+            }
             if (config.MetricsEnabled)
             {
                 var metricsPort = AddExposedPort(MetricsPortTag);

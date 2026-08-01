@@ -25,7 +25,7 @@ namespace ArchivistTests
         [TearDown]
         public void TearDownBootstrapNode()
         {
-            BootstrapNode.Stop(waitTillStopped: false);
+            BootstrapNode.Stop(waitTillStopped: true);
         }
 
         protected virtual void OnBootstrapNodeSetup(IArchivistSetup setup)

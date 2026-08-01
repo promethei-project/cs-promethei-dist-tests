@@ -18,6 +18,7 @@ namespace ArchivistPlugin
         IArchivistSetup WithBlockTTL(TimeSpan duration);
         IArchivistSetup WithBlockMaintenanceInterval(TimeSpan duration);
         IArchivistSetup WithBlockMaintenanceNumber(int numberOfBlocks);
+        IArchivistSetup WithFetchOrder(string fetchOrder);
         IArchivistSetup EnableMetrics();
         IArchivistSetup EnableMarketplace(IGethNode gethNode, IArchivistContracts archivistContracts, Action<IMarketplaceSetup> marketplaceSetup);
         /// <summary>
@@ -119,6 +120,12 @@ namespace ArchivistPlugin
         public IArchivistSetup WithBlockMaintenanceNumber(int numberOfBlocks)
         {
             BlockMaintenanceNumber = numberOfBlocks;
+            return this;
+        }
+
+        public IArchivistSetup WithFetchOrder(string fetchOrder)
+        {
+            FetchOrder = fetchOrder;
             return this;
         }
 

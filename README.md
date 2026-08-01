@@ -13,7 +13,7 @@ Currently, this project is mainly used for distributed testing of [Archivist nod
 Library with generic distributed-testing functionality. Uses NUnit3. Reference this project to build unit-test style scenarios: setup, run test, teardown. The DistTestCore responds to the following env-vars:
 - `LOGPATH` = Path where log files will be written.
 - `DATAFILEPATH` = Path where (temporary) data files will be stored.
-- `ALWAYS_LOGS` = When set, DistTestCore will always download all container logs at the end of a test run. By default, logs are only downloaded on test failure.
+- Container logs are always collected in real time by log followers. At teardown, containers whose follower failed have their logs downloaded from the cluster.
 
 ## Tests/ArchivistTests and Tests/ArchivistLongTests
 These are test assemblies that use DistTestCore to perform tests against transient Archivist nodes.
