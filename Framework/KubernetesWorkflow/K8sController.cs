@@ -394,6 +394,7 @@ namespace KubernetesWorkflow
                             PriorityClassName = GetPriorityClassName(containerRecipes),
                             Affinity = CreatePodAffinity(containerRecipes),
                             NodeSelector = CreateNodeSelector(location),
+                            TopologySpreadConstraints = CreateTopologySpreadConstraints(containerRecipes),
                             Containers = CreateDeploymentContainers(containerRecipes),
                             Volumes = CreateVolumes(containerRecipes)
                         }
@@ -421,6 +422,31 @@ namespace KubernetesWorkflow
             return new Dictionary<string, string>
             {
                 { nodeLabel.Key, nodeLabel.Value }
+            };
+        }
+
+        private IList<V1TopologySpreadConstraint> CreateTopologySpreadConstraints(ContainerRecipe[] containerRecipes)
+        {
+            // Spread each test's pods across cluster hosts using the shared
+            // deployid label stamped on every pod by the test lifecycle. The
+            // deployment-level selector would be a no-op (single replica).
+            var deployId = containerRecipes
+                .SelectMany(r => r.PodLabels.GetLabels())
+                .FirstOrDefault(kv => kv.Key == "deployid");
+            if (string.IsNullOrEmpty(deployId.Key)) return new List<V1TopologySpreadConstraint>();
+
+            return new List<V1TopologySpreadConstraint>
+            {
+                new V1TopologySpreadConstraint
+                {
+                    MaxSkew = 1,
+                    TopologyKey = "kubernetes.io/hostname",
+                    WhenUnsatisfiable = "ScheduleAnyway",
+                    LabelSelector = new V1LabelSelector
+                    {
+                        MatchLabels = new Dictionary<string, string> { { "deployid", deployId.Value } }
+                    }
+                }
             };
         }
 
