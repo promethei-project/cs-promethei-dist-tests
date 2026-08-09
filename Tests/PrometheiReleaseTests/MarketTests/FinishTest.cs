@@ -21,6 +21,7 @@ namespace PrometheiReleaseTests.MarketTests
                 this.hosts = hosts;
                 purchaseParams = PurchaseParams.Default
                     .WithDuration(TimeSpan.FromMinutes(durationMinutes))
+                    .WithExpiry(TimeSpan.FromMinutes(durationMinutes) - TimeSpan.FromMinutes(1))
                     .WithNodes(slots)
                     .WithTolerance(tolerance);
             }
