@@ -44,24 +44,25 @@ namespace PrometheiReleaseTests.MarketTests
             var host = fills.First().Host;
             var slots = host.Marketplace.GetSlots();
             // We select one slot of this host.
-            var slot = slots.First();
+            var slotId = slots.First();
 
             Log("The state of a successfully started slot should be 'proving'.");
-            Assert.That(slot.State, Is.EqualTo(StorageSlotState.Proving));
+            Assert.That(host.Marketplace.GetSlot(slotId).State, Is.EqualTo(StorageSlotState.Proving));
 
             Log("The RPC connection provider goes down.");
             rpcNode.Pause();
 
             Log("We expect the host to report and error state for this slot.");
-            WaitUntilSlotState(host, slot.SlotId, StorageSlotState.Errored);
+            WaitUntilSlotState(host, slotId, StorageSlotState.Errored);
 
-            Sleep(TimeSpan.FromMinutes(delayMinutes));
+            Log($"Apply a delay of {delayMinutes} minutes...");
+            Thread.Sleep(TimeSpan.FromMinutes(delayMinutes));
 
             Log("We restore the RPC connecting...");
             rpcNode.Resume();
 
             Log("The host's slot should recover.");
-            WaitUntilSlotState(host, slot.SlotId, StorageSlotState.Proving);
+            WaitUntilSlotState(host, slotId, StorageSlotState.Proving);
         }
 
         [Test]
@@ -93,22 +94,19 @@ namespace PrometheiReleaseTests.MarketTests
 
             // There's no way to check the validator status directly. We wait a while.
             Log("We wait 5 periods. That should be enough to free the slot if the validator was looking.");
-            Sleep(GetPeriodDuration() * 5);
+            Thread.Sleep(GetPeriodDuration() * 5);
 
             Assert.That(numMarkedAsMissing, Is.EqualTo(0));
             Log("But the validator was offline, so no proof was marked as missing.");
 
-            Sleep(TimeSpan.FromMinutes(delayMinutes));
+            Thread.Sleep(TimeSpan.FromMinutes(delayMinutes));
 
             Log("The RPC connection provider is restored.");
             rpcNode.Resume();
 
-            var allowedTimeout = CalculateAllowedTimeout(delayMinutes);
             Log("The validator should resume work and mark proofs as missing.");
-            Log("Because the validator uses an exponential-backoff for the RPC connection,");
-            Log($"a delay of {delayMinutes} minutes implies an allowed timeout of {Time.FormatDuration(allowedTimeout)}");
             Time.WaitUntil(() => numMarkedAsMissing > 0,
-                timeout: allowedTimeout,
+                timeout: GetPeriodDuration() * 5,
                 retryDelay: TimeSpan.FromSeconds(10),
                 msg: "At least 1 proof is marked as missing."
             );
@@ -172,23 +170,12 @@ namespace PrometheiReleaseTests.MarketTests
 
         private IStoragePurchaseContract CreateStorageRequest(IPrometheiNode client)
         {
-            var cid = client.UploadFile(GenerateTestFile(PurchaseParams.Default.UploadFilesize));
-            return client.Marketplace.RequestStorage(new StoragePurchaseRequest(cid, p => p
-                .WithDuration(HostAvailabilityMaxDuration * 0.75)
-                .WithProofProbability(1)
-            ));
-        }
-
-        private TimeSpan CalculateAllowedTimeout(int delayMinutes)
-        {
-            var gracePeriod = 10 * GetPeriodDuration();
-            var delaySeconds = 1;
-            while (delaySeconds < (delayMinutes * 60))
+            var cid = client.UploadFile(GenerateTestFile(DefaultPurchase.UploadFilesize));
+            return client.Marketplace.RequestStorage(new StoragePurchaseRequest(cid)
             {
-                delaySeconds += delaySeconds + 1;
-            }
-            delaySeconds += delaySeconds + 1;
-            return TimeSpan.FromSeconds(delaySeconds) + gracePeriod;
+                Duration = HostAvailabilityMaxDuration * 0.75,
+                ProofProbability = 1
+            });
         }
     }
 }

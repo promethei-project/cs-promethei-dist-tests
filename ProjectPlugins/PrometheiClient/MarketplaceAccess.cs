@@ -8,7 +8,7 @@ namespace PrometheiClient
     {
         void MakeStorageAvailable(CreateStorageAvailability availability);
         StorageAvailability GetAvailability();
-        StorageSlotItem[] GetSlots();
+        string[] GetSlots();
         StorageSlotItem GetSlot(string slotId);
         IStoragePurchaseContract RequestStorage(StoragePurchaseRequest purchase);
     }
@@ -29,8 +29,8 @@ namespace PrometheiClient
         public IStoragePurchaseContract RequestStorage(StoragePurchaseRequest purchase)
         {
             purchase.Log(log);
-            if (purchase.PurchaseParams.Expiry < TimeSpan.FromMinutes(6.0)) throw new Exception($"Expiry should be at least 6 minutes. Was: {Time.FormatDuration(purchase.PurchaseParams.Expiry)}");
-            if (purchase.PurchaseParams.Duration < purchase.PurchaseParams.Expiry) throw new Exception($"Duration must be larger than expiry. Duration: {Time.FormatDuration(purchase.PurchaseParams.Duration)} Expiry: {Time.FormatDuration(purchase.PurchaseParams.Expiry)}");
+            if (purchase.Expiry < TimeSpan.FromMinutes(6.0)) throw new Exception($"Expiry should be at least 6 minutes. Was: {Time.FormatDuration(purchase.Expiry)}");
+            if (purchase.Duration < purchase.Expiry) throw new Exception($"Duration must be larger than expiry. Duration: {Time.FormatDuration(purchase.Duration)} Expiry: {Time.FormatDuration(purchase.Expiry)}");
 
             var swResult = Stopwatch.Measure(log, nameof(RequestStorage), () =>
             {
@@ -74,11 +74,10 @@ namespace PrometheiClient
             return result;
         }
 
-        public StorageSlotItem[] GetSlots()
+        public string[] GetSlots()
         {
             var result = prometheiAccess.GetSlots();
-            Log("Active slots: " + result.Length);
-            foreach (var s in result) s.Log(log);
+            Log("Active slots: " + result);
             return result;
         }
 
@@ -115,7 +114,7 @@ namespace PrometheiClient
             throw new NotImplementedException();
         }
 
-        public StorageSlotItem[] GetSlots()
+        public string[] GetSlots()
         {
             Unavailable();
             throw new NotImplementedException();
