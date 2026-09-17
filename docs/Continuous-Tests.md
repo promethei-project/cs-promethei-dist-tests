@@ -13,7 +13,7 @@
  Usually, we are running Continuous Tests manually and for automated runs, please refer to the [Tests automation](Automation.md).
 
  We have two projects in the repository
- - [ArchivistNetDeployer](../ArchivistNetDeployer) - Prepare environment to run the tests
+ - [PrometheiNetDeployer](../PrometheiNetDeployer) - Prepare environment to run the tests
  - [ContinuousTests](../ContinuousTests) - Continuous Tests
 
  And they are used to prepare environment and run Continuous Tests.
@@ -53,15 +53,15 @@
       #     mountPath: /opt/kubeconfig.yaml
       #     subPath: kubeconfig.yaml
       #   - name: logs
-      #     mountPath: /var/log/archivist-dist-tests
+      #     mountPath: /var/log/promethei-dist-tests
         command: ["sleep", "infinity"]
       # volumes:
       #   - name: kubeconfig
       #     secret:
-      #       secretName: archivist-dist-tests-app-kubeconfig
+      #       secretName: promethei-dist-tests-app-kubeconfig
       #   - name: logs
       #     hostPath:
-      #       path: /var/log/archivist-dist-tests
+      #       path: /var/log/promethei-dist-tests
     ```
 
     ```shell
@@ -70,7 +70,7 @@
 
  2. Copy kubeconfig to the runner Pod using the name you set in the previous step
     ```shell
-    kubectl cp ~/.kube/archivist-dist-tests.yaml tests-runner:/opt/kubeconfig.yaml
+    kubectl cp ~/.kube/promethei-dist-tests.yaml tests-runner:/opt/kubeconfig.yaml
     ```
 
  3. Exec into the runner Pod using the name you set in the previous step
@@ -93,26 +93,26 @@
     tmux
 
     cd /opt
-    git clone https://github.com/durability-labs/cs-archivist-dist-tests.git
+    git clone https://github.com/promethei-project/cs-promethei-dist-tests.git
     ```
 
- 6. Run `ArchivistNetDeployer`
+ 6. Run `PrometheiNetDeployer`
     ```shell
     # Usually take ~ 10 minutes
-    cd cs-archivist-dist-tests/Tools/ArchivistNetDeployer
+    cd cs-promethei-dist-tests/Tools/PrometheiNetDeployer
 
     # Adjust values
     vi deploy-continuous-testnet.sh
 
-    # Deploy Archivist Netwotk
+    # Deploy Promethei Netwotk
     export RUNID=$(date +%Y%m%d-%H%M%S)
     bash deploy-continuous-testnet.sh
     ```
 
  7. Run `ContinuousTests`
     ```shell
-    cd ../../Tests/ArchivistContinuousTests
-    cp ../../Tools/ArchivistNetDeployer/archivist-deployment.json .
+    cd ../../Tests/PrometheiContinuousTests
+    cp ../../Tools/PrometheiNetDeployer/promethei-deployment.json .
 
     # Adjust values
     vi run.sh
@@ -136,4 +136,4 @@
 
 ## Analyze logs
 
- We should check the logs in the `/opt/cs-archivist-dist-tests/Tests/ArchivistContinuousTests/logs` folder
+ We should check the logs in the `/opt/cs-promethei-dist-tests/Tests/PrometheiContinuousTests/logs` folder

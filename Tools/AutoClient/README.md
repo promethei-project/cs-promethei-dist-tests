@@ -1,4 +1,4 @@
-# Archivist auto-client
+# Promethei auto-client
 
 This thing will generate files, upload them, and purchase storage for them in an endless loop.
 
@@ -6,16 +6,16 @@ Can generate random images or random data of a specified size.
 
 ## How to run
 
-- dotnet 8.0 and CLI arguments: `dotnet run -- --archivist-host=... --archivist-port=...`
-- docker and env-vars: `durabilitylabs/archivist-autoclient:sha-f5ae024`
+- dotnet 8.0 and CLI arguments: `dotnet run -- --promethei-host=... --promethei-port=...`
+- docker and env-vars: `durabilitylabs/promethei-autoclient:sha-f5ae024`
 
 ## Configuration options
 Options can be configured via CLI option or environment variable.
 
 | CLI option              | Environment variable | Description                                                                                                         |
 |-------------------------|----------------------|---------------------------------------------------------------------------------------------------------------------|
-| "--archivist-host"      | "ARCHIVISTHOST"      | Archivist Host address. (default 'http://localhost')                                                                |
-| "--archivist-port"      | "ARCHIVISTPORT"      | port number of Archivist API. (8080 by default)                                                                     |
+| "--promethei-host"      | "PROMETHEIHOST"      | Promethei Host address. (default 'http://localhost')                                                                |
+| "--promethei-port"      | "PROMETHEIPORT"      | port number of Promethei API. (8080 by default)                                                                     |
 | "--datapath"            | "DATAPATH"           | Root path where all data files will be saved.                                                                       |
 | "--purchases"           | "PURCHASES"          | Number of concurrent purchases.                                                                                     |
 | "--contract-duration"   | "CONTRACTDURATION"   | contract duration in minutes. (default 6 hours)                                                                     |

@@ -1,18 +1,18 @@
-﻿using ArchivistClient;
+﻿using PrometheiClient;
 
 namespace GatewayClient
 {
     // This one's a little weird:
-    // Map the gatewayAPI types to the archivistAPI types.
+    // Map the gatewayAPI types to the prometheiAPI types.
     // They should match 100% because the gateway simply forwards.
-    // After that, we use the ArchivistClient mapper to map to non-volatile types.
+    // After that, we use the PrometheiClient mapper to map to non-volatile types.
     public class Mapper
     {
-        private readonly ArchivistClient.Mapper submapper = new ArchivistClient.Mapper();
+        private readonly PrometheiClient.Mapper submapper = new PrometheiClient.Mapper();
 
         public LocalDataset Map(GatewayApi.DataItem dataItem)
         {
-            return submapper.Map(new ArchivistOpenApi.DataItem
+            return submapper.Map(new PrometheiOpenApi.DataItem
             {
                 Cid = dataItem.Cid,
                 Manifest = Map(dataItem.Manifest),
@@ -20,9 +20,9 @@ namespace GatewayClient
             });
         }
 
-        private ArchivistOpenApi.ManifestItem Map(GatewayApi.ManifestItem manifest)
+        private PrometheiOpenApi.ManifestItem Map(GatewayApi.ManifestItem manifest)
         {
-            return new ArchivistOpenApi.ManifestItem
+            return new PrometheiOpenApi.ManifestItem
             {
                 BlockSize = manifest.BlockSize,
                 DatasetSize = manifest.DatasetSize,

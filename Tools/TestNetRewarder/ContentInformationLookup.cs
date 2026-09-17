@@ -1,5 +1,5 @@
-﻿using ArchivistClient;
-using ArchivistNetworkConfig;
+﻿using PrometheiClient;
+using PrometheiNetworkConfig;
 using Utils;
 
 namespace TestNetRewarder
@@ -8,10 +8,10 @@ namespace TestNetRewarder
     {
         private readonly GatewayClient.GatewayClient client;
         private readonly Configuration config;
-        private readonly ArchivistNetwork network;
+        private readonly PrometheiNetwork network;
         private readonly Dictionary<string, Manifest> cache = new Dictionary<string, Manifest>();
 
-        public ContentInformationLookup(Configuration config, ArchivistNetwork network)
+        public ContentInformationLookup(Configuration config, PrometheiNetwork network)
         {
             client = new GatewayClient.GatewayClient(network);
             this.config = config;

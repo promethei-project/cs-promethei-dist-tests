@@ -31,7 +31,7 @@ spec:
         - name: KUBECONFIG
           value: "/opt/kubeconfig.yaml"
         - name: LOGPATH
-          value: "/var/log/archivist-${TEST_TYPE}"
+          value: "/var/log/promethei-${TEST_TYPE}"
         - name: NAMESPACE
           value: "${NAMESPACE}"
         - name: BRANCH
@@ -42,14 +42,14 @@ spec:
           value: "${RUNID}"
         - name: IMAGE_PULL_POLICY
           value: "${IMAGE_PULL_POLICY}"
-        - name: ARCHIVISTDOCKERIMAGE
-          value: "${ARCHIVISTDOCKERIMAGE}"
-        - name: ARCHIVIST_IMAGE_PULL_POLICY
-          value: "${ARCHIVIST_IMAGE_PULL_POLICY}"
-        - name: ARCHIVIST_CONTRACTS_IMAGE
-          value: "${ARCHIVIST_CONTRACTS_IMAGE}"
-        - name: ARCHIVIST_CONTRACTS_IMAGE_PULL_POLICY
-          value: "${ARCHIVIST_CONTRACTS_IMAGE_PULL_POLICY}"
+        - name: PROMETHEIDOCKERIMAGE
+          value: "${PROMETHEIDOCKERIMAGE}"
+        - name: PROMETHEI_IMAGE_PULL_POLICY
+          value: "${PROMETHEI_IMAGE_PULL_POLICY}"
+        - name: PROMETHEI_CONTRACTS_IMAGE
+          value: "${PROMETHEI_CONTRACTS_IMAGE}"
+        - name: PROMETHEI_CONTRACTS_IMAGE_PULL_POLICY
+          value: "${PROMETHEI_CONTRACTS_IMAGE_PULL_POLICY}"
         - name: GETH_DOCKER_IMAGE
           value: "${GETH_DOCKER_IMAGE}"
         - name: GETH_IMAGE_PULL_POLICY
@@ -58,14 +58,14 @@ spec:
           value: "${PROMETHEUS_DOCKER_IMAGE}"
         - name: PROMETHEUS_IMAGE_PULL_POLICY
           value: "${PROMETHEUS_IMAGE_PULL_POLICY}"
-        - name: ARCHIVIST_DISCORDBOT_IMAGE
-          value: "${ARCHIVIST_DISCORDBOT_IMAGE}"
-        - name: ARCHIVIST_DISCORDBOT_IMAGE_PULL_POLICY
-          value: "${ARCHIVIST_DISCORDBOT_IMAGE_PULL_POLICY}"
-        - name: ARCHIVIST_REWARDERBOT_IMAGE
-          value: "${ARCHIVIST_REWARDERBOT_IMAGE}"
-        - name: ARCHIVIST_REWARDERBOT_IMAGE_PULL_POLICY
-          value: "${ARCHIVIST_REWARDERBOT_IMAGE_PULL_POLICY}"
+        - name: PROMETHEI_DISCORDBOT_IMAGE
+          value: "${PROMETHEI_DISCORDBOT_IMAGE}"
+        - name: PROMETHEI_DISCORDBOT_IMAGE_PULL_POLICY
+          value: "${PROMETHEI_DISCORDBOT_IMAGE_PULL_POLICY}"
+        - name: PROMETHEI_REWARDERBOT_IMAGE
+          value: "${PROMETHEI_REWARDERBOT_IMAGE}"
+        - name: PROMETHEI_REWARDERBOT_IMAGE_PULL_POLICY
+          value: "${PROMETHEI_REWARDERBOT_IMAGE_PULL_POLICY}"
         - name: TESTID
           value: "${TESTID}"
         - name: TESTS_TYPE
@@ -75,13 +75,13 @@ spec:
           mountPath: /opt/kubeconfig.yaml
           subPath: kubeconfig.yaml
         - name: logs
-          mountPath: /var/log/archivist-${TEST_TYPE}
+          mountPath: /var/log/promethei-${TEST_TYPE}
         args: ${COMMAND}
       restartPolicy: Never
       volumes:
         - name: kubeconfig
           secret:
-            secretName: archivist-dist-tests-app-kubeconfig
+            secretName: promethei-dist-tests-app-kubeconfig
         - name: logs
           hostPath:
-            path: /var/log/archivist-${TEST_TYPE}
+            path: /var/log/promethei-${TEST_TYPE}

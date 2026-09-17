@@ -181,7 +181,7 @@ namespace DistTestCore
             {
                 // TODO: This code is built on k8s containers.
                 // It should be remapped to use the project plugin's support for downloading logs (via IProcessControl).
-                // For now, leave this. Add support for Archivist non-container logs using the archivist node hooks.
+                // For now, leave this. Add support for Promethei non-container logs using the promethei node hooks.
                 var result = new List<IDownloadedLog>();
                 result.AddRange(stoppedContainerLogs);
                 foreach (var rc in runningContainers)

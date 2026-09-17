@@ -4,7 +4,7 @@ using Discord;
 using Newtonsoft.Json;
 using BiblioTech.Rewards;
 using Logging;
-using BiblioTech.ArchivistChecking;
+using BiblioTech.PrometheiChecking;
 using Nethereum.Model;
 
 namespace BiblioTech

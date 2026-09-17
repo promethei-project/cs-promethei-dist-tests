@@ -1,6 +1,6 @@
 using BlockchainUtils;
-using ArchivistContractsPlugin.ChainMonitor;
-using ArchivistContractsPlugin.Marketplace;
+using PrometheiContractsPlugin.ChainMonitor;
+using PrometheiContractsPlugin.Marketplace;
 using DiscordRewards;
 using Nethereum.Hex.HexConvertors.Extensions;
 using System.Globalization;

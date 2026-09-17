@@ -1,5 +1,5 @@
-﻿using ArchivistClient;
-using ArchivistNetworkConfig;
+﻿using PrometheiClient;
+using PrometheiNetworkConfig;
 using GatewayApi;
 using Utils;
 
@@ -15,7 +15,7 @@ namespace GatewayClient
             api = new GatewayApiClient(baseUrl, new HttpClient());
         }
 
-        public GatewayClient(ArchivistNetwork network)
+        public GatewayClient(PrometheiNetwork network)
             : this(network.Team.Utils.Gateway)
         {
         }

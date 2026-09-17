@@ -1,5 +1,5 @@
 using System.Text;
-using ArchivistNetworkConfig;
+using PrometheiNetworkConfig;
 using Core;
 using Logging;
 using Utils;
@@ -12,9 +12,9 @@ namespace TraceContract
         private readonly ILog log;
         private readonly IPluginTools tools;
         private readonly Config config;
-        private readonly ArchivistNetwork network;
+        private readonly PrometheiNetwork network;
 
-        public ElasticSearchLogDownloader(ILog log, IPluginTools tools, Config config, ArchivistNetwork network)
+        public ElasticSearchLogDownloader(ILog log, IPluginTools tools, Config config, PrometheiNetwork network)
         {
             this.log = log;
             this.tools = tools;
@@ -54,8 +54,8 @@ namespace TraceContract
             var start = startUtc.ToString("o");
             var end = endUtc.ToString("o");
 
-            //container_name : archivist3-5 - deploymentName as stored in pod
-            // pod_namespace : archivist - continuous - nolimits - tests - 1
+            //container_name : promethei3-5 - deploymentName as stored in pod
+            // pod_namespace : promethei - continuous - nolimits - tests - 1
 
             var source = "{\"sort\": [{\"@timestamp\": {\"order\": \"asc\"}}],\"fields\": [{\"field\": \"@timestamp\",\"format\": \"strict_date_optional_time\"},{\"field\": \"message\"}],\"size\": <SIZE>, <SEARCHAFTER> \"_source\": false,\"query\": {\"bool\": {\"must\": [{\"match\": {\"network\": \"<NETWORK>\"}}],\"filter\": [{\"range\": {\"@timestamp\": {\"format\": \"strict_date_optional_time\",\"gte\": \"<STARTTIME>\",\"lte\": \"<ENDTIME>\"}}},{\"match_phrase\": {\"pod_name\": \"<PODNAME>\"}}]}}}";
             return source

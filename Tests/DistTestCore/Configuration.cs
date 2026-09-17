@@ -13,7 +13,7 @@ namespace DistTestCore
         public Configuration()
         {
             kubeConfigFile = EnvVar.GetNullableOrDefault("KUBECONFIG");
-            logPath = EnvVar.GetOrDefault("LOGPATH", "ArchivistTestLogs");
+            logPath = EnvVar.GetOrDefault("LOGPATH", "PrometheiTestLogs");
             dataFilesPath = EnvVar.GetOrDefault("DATAFILEPATH", "TestDataFiles");
         }
 

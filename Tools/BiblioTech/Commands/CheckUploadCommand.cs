@@ -1,25 +1,25 @@
-using BiblioTech.ArchivistChecking;
+using BiblioTech.PrometheiChecking;
 using BiblioTech.Options;
 
 namespace BiblioTech.Commands
 {
     public class CheckUploadCommand : BaseCommand
     {
-        private readonly ArchivistTwoWayChecker checker;
+        private readonly PrometheiTwoWayChecker checker;
 
         private readonly StringOption cidOption = new StringOption(
             name: "cid",
-            description: "Archivist Content-Identifier",
+            description: "Promethei Content-Identifier",
             isRequired: false);
 
-        public CheckUploadCommand(ArchivistTwoWayChecker checker)
+        public CheckUploadCommand(PrometheiTwoWayChecker checker)
         {
             this.checker = checker;
         }
 
         public override string Name => "checkupload";
         public override string StartingMessage => "Connecting to the testnet... Please be patient... " + RandomBusyMessage.Get();
-        public override string Description => "Checks the upload connectivity of your Archivist node.";
+        public override string Description => "Checks the upload connectivity of your Promethei node.";
         public override CommandOption[] Options => [cidOption];
 
         protected override async Task Invoke(CommandContext context)

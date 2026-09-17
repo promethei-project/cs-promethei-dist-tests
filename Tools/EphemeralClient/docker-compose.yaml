@@ -1,18 +1,18 @@
 ﻿services:
-  ephemeral-archivist:
-    image: durabilitylabs/archivist-node:latest-dist-tests
+  ephemeral-promethei:
+    image: durabilitylabs/nim-promethei-node:latest-dist-tests
     pull_policy: always
     command:
-      - archivist
+      - promethei
     environment:
       - NETWORK=
-      - ARCHIVIST_API_PORT=8089
-      - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8079
-      - ARCHIVIST_DISC_PORT=8099
-      - ARCHIVIST_DATA_DIR=/data
-      - ARCHIVIST_LOG_LEVEL=TRACE;warn:discv5,providers,manager,cache;warn:libp2p,multistream,switch,transport,tcptransport,semaphore,asyncstreamwrapper,lpstream,mplex,mplexchannel,noise,bufferstream,mplexcoder,secure,chronosstream,connection,connmanager,websock,ws-session
-      - ARCHIVIST_API_BINDADDR=0.0.0.0
-      - ARCHIVIST_API_CORS_ORIGIN=*
+      - PROMETHEI_API_PORT=8089
+      - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8079
+      - PROMETHEI_DISC_PORT=8099
+      - PROMETHEI_DATA_DIR=/data
+      - PROMETHEI_LOG_LEVEL=TRACE;warn:discv5,providers,manager,cache;warn:libp2p,multistream,switch,transport,tcptransport,semaphore,asyncstreamwrapper,lpstream,mplex,mplexchannel,noise,bufferstream,mplexcoder,secure,chronosstream,connection,connmanager,websock,ws-session
+      - PROMETHEI_API_BINDADDR=0.0.0.0
+      - PROMETHEI_API_CORS_ORIGIN=*
       - NAT_PUBLIC_IP_AUTO=https://ip.archivist.storage
 
     ports:

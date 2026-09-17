@@ -1,4 +1,4 @@
-using ArchivistContractsPlugin.ChainMonitor;
+using PrometheiContractsPlugin.ChainMonitor;
 
 namespace TestNetRewarder
 {

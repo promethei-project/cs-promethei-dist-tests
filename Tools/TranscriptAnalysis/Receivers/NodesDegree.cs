@@ -1,10 +1,10 @@
-using ArchivistClient;
-using ArchivistPlugin.OverwatchSupport;
+using PrometheiClient;
+using PrometheiPlugin.OverwatchSupport;
 using OverwatchTranscript;
 
 namespace TranscriptAnalysis.Receivers
 {
-    public class NodesDegree : BaseReceiver<OverwatchArchivistEvent>
+    public class NodesDegree : BaseReceiver<OverwatchPrometheiEvent>
     {
         public class Dial
         {
@@ -50,7 +50,7 @@ namespace TranscriptAnalysis.Receivers
 
         public override string Name => "NodesDegree";
 
-        public override void Receive(ActivateEvent<OverwatchArchivistEvent> @event)
+        public override void Receive(ActivateEvent<OverwatchPrometheiEvent> @event)
         {
             if (@event.Payload.DialSuccessful != null)
             {
@@ -109,8 +109,8 @@ namespace TranscriptAnalysis.Receivers
 
         private void AddDial(string peerId, string targetPeerId)
         {
-            peerId = ArchivistUtils.ToShortId(peerId);
-            targetPeerId = ArchivistUtils.ToShortId(targetPeerId);
+            peerId = PrometheiUtils.ToShortId(peerId);
+            targetPeerId = PrometheiUtils.ToShortId(targetPeerId);
 
             var peer = GetNode(peerId);
             var target = GetNode(targetPeerId); ;

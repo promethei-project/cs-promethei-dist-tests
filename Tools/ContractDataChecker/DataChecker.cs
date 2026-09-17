@@ -1,5 +1,5 @@
-﻿using ArchivistClient;
-using ArchivistContractsPlugin.ChainMonitor;
+﻿using PrometheiClient;
+using PrometheiContractsPlugin.ChainMonitor;
 using ChainFollowingApp;
 using Logging;
 using Newtonsoft.Json;
@@ -11,22 +11,22 @@ namespace ContractDataChecker
     {
         private readonly LogPrefixer log;
         private readonly Configuration config;
-        private readonly IArchivistNode archivistNode;
+        private readonly IPrometheiNode prometheiNode;
         private ChainState chainState = null!;
         private string lastRequestId = string.Empty;
 
-        public DataChecker(LogPrefixer log, Configuration config, IArchivistNode archivistNode)
+        public DataChecker(LogPrefixer log, Configuration config, IPrometheiNode prometheiNode)
         {
             this.log = log;
             this.config = config;
-            this.archivistNode = archivistNode;
+            this.prometheiNode = prometheiNode;
         }
 
         private void CheckRandomRequestData()
         {
             if (chainState == null) return;
 
-            var runningRequests = chainState.Requests.Where(r => r.State == ArchivistContractsPlugin.RequestState.Started).ToArray();
+            var runningRequests = chainState.Requests.Where(r => r.State == PrometheiContractsPlugin.RequestState.Started).ToArray();
             if (runningRequests.Length == 0)
             {
                 Log("No running requests known.");
@@ -94,7 +94,7 @@ namespace ContractDataChecker
         {
             try
             {
-                var result = archivistNode.DownloadContent(request.Cid, timeout: TimeSpan.FromMinutes(30));
+                var result = prometheiNode.DownloadContent(request.Cid, timeout: TimeSpan.FromMinutes(30));
                 if (result != null)
                 {
                     try
@@ -113,7 +113,7 @@ namespace ContractDataChecker
         {
             try
             {
-                return archivistNode.DownloadManifestOnly(request.Cid);
+                return prometheiNode.DownloadManifestOnly(request.Cid);
             }
             catch { }
             return null;

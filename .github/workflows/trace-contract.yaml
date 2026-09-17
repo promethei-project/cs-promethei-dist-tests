@@ -37,7 +37,7 @@ jobs:
       - name: Variables
         run: |
           echo "PURCHASE_ID=${{ inputs.purchaseid }}" >> $GITHUB_ENV
-          echo "ARCHIVIST_NETWORK=${{ inputs.network }}" >> $GITHUB_ENV
+          echo "PROMETHEI_NETWORK=${{ inputs.network }}" >> $GITHUB_ENV
 
       - name: Run Trace
         run: |

@@ -1,9 +1,9 @@
 using BlockchainUtils;
-using ArchivistContractsPlugin;
-using ArchivistContractsPlugin.Marketplace;
+using PrometheiContractsPlugin;
+using PrometheiContractsPlugin.Marketplace;
 using GethPlugin;
 using Logging;
-using ArchivistNetworkConfig;
+using PrometheiNetworkConfig;
 using Utils;
 
 namespace GethConnector
@@ -11,7 +11,7 @@ namespace GethConnector
     public class GethConnector
     {
         public IGethNode GethNode { get; }
-        public IArchivistContracts ArchivistContracts { get; }
+        public IPrometheiContracts PrometheiContracts { get; }
 
         private const string GethPrivKeyVar = "GETH_PRIVATE_KEY";
 
@@ -20,7 +20,7 @@ namespace GethConnector
             return Initialize(log, FetchNetworkConfig(log), new BlockCache(log), new NullRequestsCache());
         }
 
-        public static GethConnector? Initialize(ILog log, ArchivistNetwork network)
+        public static GethConnector? Initialize(ILog log, PrometheiNetwork network)
         {
             return Initialize(log, network, new BlockCache(log), new NullRequestsCache());
         }
@@ -30,49 +30,49 @@ namespace GethConnector
             return Initialize(log, FetchNetworkConfig(log), blockCache, requestsCache);
         }
 
-        public static GethConnector? Initialize(ILog log, ArchivistNetwork networkConfig, BlockCache blockCache, IRequestsCache requestsCache)
+        public static GethConnector? Initialize(ILog log, PrometheiNetwork networkConfig, BlockCache blockCache, IRequestsCache requestsCache)
         {
             var privateKey = EnvVar.GetOrThrow(GethPrivKeyVar);
 
             var gethNode = new CustomGethNode(log, blockCache, networkConfig.Team.Utils.BotRpc, privateKey);
-            var config = GetArchivistMarketplaceConfig(gethNode, new ContractAddress(networkConfig.Marketplace.ContractAddress));
+            var config = GetPrometheiMarketplaceConfig(gethNode, new ContractAddress(networkConfig.Marketplace.ContractAddress));
 
-            var contractsDeployment = new ArchivistContractsDeployment(
+            var contractsDeployment = new PrometheiContractsDeployment(
                 config: config,
                 marketplaceAddress: new ContractAddress(networkConfig.Marketplace.ContractAddress),
                 abi: networkConfig.Marketplace.ABI
             );
 
-            var contracts = new ArchivistContractsAccess(log, gethNode, contractsDeployment, requestsCache);
+            var contracts = new PrometheiContractsAccess(log, gethNode, contractsDeployment, requestsCache);
 
             return new GethConnector(gethNode, contracts);
         }
 
-        private static ArchivistNetwork FetchNetworkConfig(ILog log)
+        private static PrometheiNetwork FetchNetworkConfig(ILog log)
         {
             try
             {
-                var networkConnector = new ArchivistNetworkConnector(log);
+                var networkConnector = new PrometheiNetworkConnector(log);
                 return networkConnector.GetConfig();
             }
             catch (Exception ex)
             {
-                log.Error($"Unable to load ArchivistNetworkConfig: " + ex);
+                log.Error($"Unable to load PrometheiNetworkConfig: " + ex);
                 throw;
             }
         }
 
-        private static MarketplaceConfig GetArchivistMarketplaceConfig(IGethNode gethNode, ContractAddress marketplaceAddress)
+        private static MarketplaceConfig GetPrometheiMarketplaceConfig(IGethNode gethNode, ContractAddress marketplaceAddress)
         {
             var func = new ConfigurationFunctionBase();
             var response = gethNode.Call<ConfigurationFunctionBase, ConfigurationOutputDTO>(marketplaceAddress, func);
             return response.ReturnValue1;
         }
 
-        private GethConnector(IGethNode gethNode, IArchivistContracts archivistContracts)
+        private GethConnector(IGethNode gethNode, IPrometheiContracts prometheiContracts)
         {
             GethNode = gethNode;
-            ArchivistContracts = archivistContracts;
+            PrometheiContracts = prometheiContracts;
         }
     }
 }

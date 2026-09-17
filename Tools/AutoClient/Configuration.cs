@@ -4,8 +4,8 @@ namespace AutoClient
 {
     public class Configuration
     {
-        [Uniform("archivist-endpoints", "ce", "ARCHIVISTENDPOINTS", false, "Archivist endpoints. Semi-colon separated. (default 'http://localhost:8080')")]
-        public string ArchivistEndpoints { get; set; } =
+        [Uniform("promethei-endpoints", "ce", "PROMETHEIENDPOINTS", false, "Promethei endpoints. Semi-colon separated. (default 'http://localhost:8080')")]
+        public string PrometheiEndpoints { get; set; } =
             "http://localhost:8080" + ";" +
             "http://localhost:8081" + ";" +
             "http://localhost:8082" + ";" +

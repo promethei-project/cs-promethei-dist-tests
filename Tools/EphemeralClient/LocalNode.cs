@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
-using ArchivistClient;
-using ArchivistNetworkConfig;
+using PrometheiClient;
+using PrometheiNetworkConfig;
 using Logging;
 using MetricsServer;
 
@@ -17,7 +17,7 @@ namespace EphemeralClient
             failedToStart = metricsServer.CreateEvent("node_start_failed", "failed to start node");
         }
 
-        public void Initialize(ArchivistNetwork network)
+        public void Initialize(PrometheiNetwork network)
         {
             var filename = "docker-compose.yaml";
             if (!File.Exists(filename))
@@ -43,7 +43,7 @@ namespace EphemeralClient
             throw new InvalidDataException();
         }
 
-        public IArchivistNode Start()
+        public IPrometheiNode Start()
         {
             try
             {
@@ -52,12 +52,12 @@ namespace EphemeralClient
 
                 Thread.Sleep(TimeSpan.FromSeconds(40.0));
 
-                var factory = new ArchivistNodeFactory(log, "datadir");
-                var instance = ArchivistInstance.CreateFromApiEndpoint(
+                var factory = new PrometheiNodeFactory(log, "datadir");
+                var instance = PrometheiInstance.CreateFromApiEndpoint(
                     "name",
                     new Utils.Address("name", "http://localhost", 8089)
                 );
-                return factory.CreateArchivistNode(instance);
+                return factory.CreatePrometheiNode(instance);
             }
             catch (Exception ex)
             {

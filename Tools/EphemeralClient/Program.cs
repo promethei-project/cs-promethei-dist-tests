@@ -1,5 +1,5 @@
-﻿using ArchivistClient;
-using ArchivistNetworkConfig;
+﻿using PrometheiClient;
+using PrometheiNetworkConfig;
 using ArgsUniform;
 using FileUtils;
 using Logging;
@@ -53,7 +53,7 @@ namespace EphemeralClient
             localNode = new LocalNode(log, metricsServer);
 
             Log("Loading network config...");
-            var networkConnector = new ArchivistNetworkConnector(log);
+            var networkConnector = new PrometheiNetworkConnector(log);
             var network = networkConnector.GetConfig();
             Log($"Network: {network.Name}");
             gateway = new GatewayClient.GatewayClient(network);
@@ -113,7 +113,7 @@ namespace EphemeralClient
             }
         }
 
-        private void RunCheckSteps(IArchivistNode node)
+        private void RunCheckSteps(IPrometheiNode node)
         {
             var file = fileManager.GenerateFile(config.FilesizeMb.MB());
 

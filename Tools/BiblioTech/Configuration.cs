@@ -41,11 +41,11 @@ namespace BiblioTech
         [Uniform("no-discord", "nd", "NODISCORD", false, "For debugging: Bypasses all Discord API calls.")]
         public int NoDiscord { get; set; } = 0;
 
-        [Uniform("archivist-endpoint", "ce", "ARCHIVISTENDPOINT", false, "Archivist endpoint. (default 'http://localhost:8080')")]
-        public string ArchivistEndpoint { get; set; } = "http://localhost:8080";
+        [Uniform("promethei-endpoint", "ce", "PROMETHEIENDPOINT", false, "Promethei endpoint. (default 'http://localhost:8080')")]
+        public string PrometheiEndpoint { get; set; } = "http://localhost:8080";
 
-        [Uniform("archivist-endpoint-auth", "cea", "ARCHIVISTENDPOINTAUTH", false, "Archivist endpoint basic auth. Colon separated username and password. (default: empty, no auth used.)")]
-        public string ArchivistEndpointAuth { get; set; } = "";
+        [Uniform("promethei-endpoint-auth", "cea", "PROMETHEIENDPOINTAUTH", false, "Promethei endpoint basic auth. Colon separated username and password. (default: empty, no auth used.)")]
+        public string PrometheiEndpointAuth { get; set; } = "";
 
         #region Role Rewards
 

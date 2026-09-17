@@ -1,7 +1,7 @@
 using ArgsUniform;
 using AutoClient;
 using AutoClient.Modes;
-using ArchivistClient;
+using PrometheiClient;
 using GethPlugin;
 using Utils;
 using WebUtils;
@@ -31,8 +31,8 @@ public class Program
     public void Run()
     {
         Log("Setting up instances...");
-        var archivistNodes = CreateArchivistWrappers();
-        var nodeDispatcher = new NodeDispatcher(app.Log, archivistNodes);
+        var prometheiNodes = CreatePrometheiWrappers();
+        var nodeDispatcher = new NodeDispatcher(app.Log, prometheiNodes);
 
         var folderStore = new FolderStoreMode(app, nodeDispatcher);
         Log("Starting folder-store mode...");
@@ -45,18 +45,18 @@ public class Program
         Log("Done");
     }
 
-    private ArchivistWrapper[] CreateArchivistWrappers()
+    private PrometheiWrapper[] CreatePrometheiWrappers()
     {
-        var endpointStrs = app.Config.ArchivistEndpoints
+        var endpointStrs = app.Config.PrometheiEndpoints
             .Replace(Environment.NewLine, ";")
             .Split(";", StringSplitOptions.RemoveEmptyEntries);
-        var result = new List<ArchivistWrapper>();
+        var result = new List<PrometheiWrapper>();
 
         Log($"Checking {endpointStrs.Length} endpoints...");
         var i = 1;
         foreach (var e in endpointStrs)
         {
-            result.Add(CreateArchivistWrapper(e.Trim(), i));
+            result.Add(CreatePrometheiWrapper(e.Trim(), i));
             i++;
         }
 
@@ -65,7 +65,7 @@ public class Program
 
     private readonly string LogLevel = "TRACE;info:discv5,providers,routingtable,manager,cache;warn:libp2p,multistream,switch,transport,tcptransport,semaphore,asyncstreamwrapper,lpstream,mplex,mplexchannel,noise,bufferstream,mplexcoder,secure,chronosstream,connection,websock,ws-session,muxedupgrade,upgrade,identify,contracts,clock,serde,json,serialization,JSONRPC-WS-CLIENT,JSONRPC-HTTP-CLIENT,repostore";
 
-    private ArchivistWrapper CreateArchivistWrapper(string endpoint, int number)
+    private PrometheiWrapper CreatePrometheiWrapper(string endpoint, int number)
     {
         var splitIndex = endpoint.LastIndexOf(':');
         var host = endpoint.Substring(0, splitIndex);
@@ -83,14 +83,14 @@ public class Program
         var modifyingPrefixer = new LogPrefixer(app.Log, "");
         var log = new LogPrefixer(modifyingPrefixer, $"[{numberStr}]");
         var httpFactory = new HttpFactory(log, new AutoClientWebTimeSet());
-        var archivistNodeFactory = new ArchivistNodeFactory(log: log, httpFactory: httpFactory, dataDir: app.Config.DataPath);
-        var instance = ArchivistInstance.CreateFromApiEndpoint($"[AC-{numberStr}]", address, EthAccountGenerator.GenerateNew());
-        var node = archivistNodeFactory.CreateArchivistNode(instance);
+        var prometheiNodeFactory = new PrometheiNodeFactory(log: log, httpFactory: httpFactory, dataDir: app.Config.DataPath);
+        var instance = PrometheiInstance.CreateFromApiEndpoint($"[AC-{numberStr}]", address, EthAccountGenerator.GenerateNew());
+        var node = prometheiNodeFactory.CreatePrometheiNode(instance);
 
         node.SetLogLevel(LogLevel);
 
         app.Log.Log($"'{address}': Connect successful");
-        return new ArchivistWrapper(app, node, modifyingPrefixer);
+        return new PrometheiWrapper(app, node, modifyingPrefixer);
     }
 
     private void Log(string msg)
@@ -100,6 +100,6 @@ public class Program
 
     private static void PrintHelp()
     {
-        Console.WriteLine("Uploads files and creates Archivist storage contracts for them.");
+        Console.WriteLine("Uploads files and creates Promethei storage contracts for them.");
     }
 }

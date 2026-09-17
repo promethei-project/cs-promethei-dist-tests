@@ -18,8 +18,8 @@
     <ProjectReference Include="..\..\Framework\NethereumWorkflow\NethereumWorkflow.csproj" />
     <ProjectReference Include="..\..\Framework\OverwatchTranscript\OverwatchTranscript.csproj" />
     <ProjectReference Include="..\..\Framework\Utils\Utils.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistClient\ArchivistClient.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistContractsPlugin\ArchivistContractsPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiClient\PrometheiClient.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiContractsPlugin\PrometheiContractsPlugin.csproj" />
     <ProjectReference Include="..\..\Tools\TestNetRewarder\TestNetRewarder.csproj" />
   </ItemGroup>
 

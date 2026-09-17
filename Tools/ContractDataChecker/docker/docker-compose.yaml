@@ -5,13 +5,13 @@ services:
       dockerfile: Tools/ContractDataChecker/docker/Dockerfile
     container_name: cdatac
     environment:
-      - ARCHIVISTENDPOINT=http://localhost:8081
+      - PROMETHEIENDPOINT=http://localhost:8081
       - DATAPATH=/data
       - INTERVALMINUTES=10
       - RELATIVEHISTORY=3600
       
-      - ARCHIVIST_NETWORK=devnet
-      - ARCHIVIST_VERSION=latest
+      - PROMETHEI_NETWORK=devnet
+      - PROMETHEI_VERSION=latest
       # Address: 0x9bc1b45de7a67a064932a4f18a415d0adce4ca56
       - GETH_PRIVATE_KEY=0x7c8ebb5a5c63ba549f7ea44d0f763f37642727ac0d772b8c783ac03ba82b6ea6
     volumes:

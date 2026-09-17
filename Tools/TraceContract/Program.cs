@@ -1,11 +1,11 @@
 using BlockchainUtils;
-using ArchivistContractsPlugin;
-using ArchivistContractsPlugin.Marketplace;
+using PrometheiContractsPlugin;
+using PrometheiContractsPlugin.Marketplace;
 using Core;
 using GethPlugin;
 using Logging;
 using Utils;
-using ArchivistNetworkConfig;
+using PrometheiNetworkConfig;
 
 namespace TraceContract
 {
@@ -14,13 +14,13 @@ namespace TraceContract
         public static void Main(string[] args)
         {
             ProjectPlugin.Load<GethPlugin.GethPlugin>();
-            ProjectPlugin.Load<ArchivistContractsPlugin.ArchivistContractsPlugin>();
+            ProjectPlugin.Load<PrometheiContractsPlugin.PrometheiContractsPlugin>();
 
             var p = new Program();
             p.Run();
         }
 
-        private readonly ArchivistNetwork network;
+        private readonly PrometheiNetwork network;
         private readonly ILog baseLog;
         private readonly ILog appLog;
         private readonly Input input = new();
@@ -38,7 +38,7 @@ namespace TraceContract
 
             appLog = new LogPrefixer(baseLog, "(TraceContract)");
 
-            var connector = new ArchivistNetworkConnector(baseLog);
+            var connector = new PrometheiNetworkConnector(baseLog);
             network = connector.GetConfig();
 
             output = new(appLog, input, config, network);
@@ -63,7 +63,7 @@ namespace TraceContract
             entryPoint.Announce();
             var ci = entryPoint.CreateInterface();
             var geth = ConnectGethNode();
-            var contracts = ConnectArchivistContracts(ci, geth);
+            var contracts = ConnectPrometheiContracts(ci, geth);
 
             output.LogRequestId(input.RequestId);
             var chainTracer = new ChainTracer(appLog, baseLog, geth, contracts, input, output);
@@ -85,14 +85,14 @@ namespace TraceContract
             return new CustomGethNode(baseLog, blockCache, network.Team.Utils.BotRpc, account.PrivateKey);
         }
 
-        private IArchivistContracts ConnectArchivistContracts(CoreInterface ci, IGethNode geth)
+        private IPrometheiContracts ConnectPrometheiContracts(CoreInterface ci, IGethNode geth)
         {
-            var deployment = new ArchivistContractsDeployment(
+            var deployment = new PrometheiContractsDeployment(
                 config: new MarketplaceConfig(),
                 marketplaceAddress: new ContractAddress(network.Marketplace.ContractAddress),
                 abi: network.Marketplace.ABI
             );
-            return ci.WrapArchivistContractsDeployment(deployment, s => s
+            return ci.WrapPrometheiContractsDeployment(deployment, s => s
                 .WithRpcNode(geth)
                 .WithRequestsCache(               
                     new DiskRequestsCache(Path.Combine(config.DataDir, "requests_cache"))

@@ -7,9 +7,9 @@ namespace AutoClient.Modes.FolderStore
     {
         private readonly ILog log;
         private readonly string filepath;
-        private readonly ArchivistWrapper instance;
+        private readonly PrometheiWrapper instance;
 
-        public QuotaCheck(ILog log, string filepath, ArchivistWrapper instance)
+        public QuotaCheck(ILog log, string filepath, PrometheiWrapper instance)
         {
             this.log = log;
             this.filepath = filepath;

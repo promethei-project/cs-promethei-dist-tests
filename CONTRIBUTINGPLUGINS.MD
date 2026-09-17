@@ -1,7 +1,7 @@
-# Distributed System Tests for Archivist node
+# Distributed System Tests for Promethei node
 
 ## Contributing plugins
-The testing framework was created for testing Archivist. However, it's been designed such that other containerized projects can 'easily' be added.
+The testing framework was created for testing Promethei. However, it's been designed such that other containerized projects can 'easily' be added.
 
 In this file, you'll see 'users' (in quote) mentioned once or twice. This refers to code/projects/tests which end up making use of your plugin. 'Users' come in many shapes and sizes and tend to have many differen use-cases in mind. Please consider this when reading this document and writing your plugin.
 
@@ -117,7 +117,7 @@ public static class CoreInterfaceExtensions
 
 Should your deploy methods not return framework-types like RunningContainers, please make sure that your custom times are serializable. (Decorate them with the `[Serializable]` attribute.) Tools have been built using this framework which rely on the ability to serialize and store deployment information for later use. Please don't break this possibility. (Consider using the `SerializeGate` type to help ensure compatibility.)
 
-The primary reason to decouple deploying and wrapping functionalities is that some use cases require these steps to be performed by separate applications, and different moments in time. For this reason, whatever is returned by the deploy methods should be serializable. After deserialization at some later time, it should then be valid input for the wrap method. The Archivist continuous tests system is a clear example of this use case: The `ArchivistNetDeployer` tool uses deploy methods to create Archivist nodes. Then it writes the returned objects to a JSON file. Some time later, the `ArchivistContinuousTests` application uses this JSON file to reconstruct the objects created by the deploy methods. It then uses the wrap methods to create accessors and interactors, which are used for testing.
+The primary reason to decouple deploying and wrapping functionalities is that some use cases require these steps to be performed by separate applications, and different moments in time. For this reason, whatever is returned by the deploy methods should be serializable. After deserialization at some later time, it should then be valid input for the wrap method. The Promethei continuous tests system is a clear example of this use case: The `PrometheiNetDeployer` tool uses deploy methods to create Promethei nodes. Then it writes the returned objects to a JSON file. Some time later, the `PrometheiContinuousTests` application uses this JSON file to reconstruct the objects created by the deploy methods. It then uses the wrap methods to create accessors and interactors, which are used for testing.
 
 ## Container Recipes
 In order to run a container of your application, the framework needs to know how to create that container. Think of a container recipe as being similar to a docker-compose.yaml file: You specify the docker image, ports, environment variables, persistent volumes, and secrets. However, container recipes are code. This allows you to add conditional behaviour to how your container is constructed. For example: The 'user' of your plugin specifies in their call input that they want to run your application in a certain mode. This would cause your container recipe to set certain environment variables, which cause the application to behave in the requested way.
@@ -141,18 +141,18 @@ Example:
 ```C#
 {
    var location = Ci.GetKnownLocations().Get("kbnode_euwest_paris1");
-   var archivist = Ci.StartArchivistNode(s => s.At(location));
+   var promethei = Ci.StartPrometheiNode(s => s.At(location));
 }
 ```
-In this example, 'Ci' is an instance of the core interface. The ArchivistPlugin exposes a function 'StartArchivistNode', which allows its user to specify a location. This location is then passed to the `workflow` tool when the Archivist plugin starts its container.
+In this example, 'Ci' is an instance of the core interface. The PrometheiPlugin exposes a function 'StartPrometheiNode', which allows its user to specify a location. This location is then passed to the `workflow` tool when the Promethei plugin starts its container.
 
 The available locations array guarantees that each entry corresponds to a different kubernetes host.
 ```C#
 {
    var knownLocations = Ci.GetKnownLocations();
    // I don't care where exactly, as long as they are different locations.
-   var archivistAtZero = Ci.StartArchivistNode(s => s.At(knownLocations.Get(0)));
-   var archivistAtOne = Ci.StartArchivistNode(s => s.At(knownLocations.Get(1)));
+   var prometheiAtZero = Ci.StartPrometheiNode(s => s.At(knownLocations.Get(0)));
+   var prometheiAtOne = Ci.StartPrometheiNode(s => s.At(knownLocations.Get(1)));
 }
 ```
 

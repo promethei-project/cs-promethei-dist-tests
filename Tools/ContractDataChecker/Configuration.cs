@@ -9,8 +9,8 @@ namespace ContractDataChecker
         [Uniform("datapath", "dp", "DATAPATH", true, "Root path where all data files will be saved.")]
         public string DataPath { get; set; } = "datapath";
 
-        [Uniform("archivist-endpoint", "ce", "ARCHIVISTENDPOINT", false, "Archivist endpoint. (default 'http://localhost:8080')")]
-        public string ArchivistEndpoint { get; set; } = "http://localhost:8080";
+        [Uniform("promethei-endpoint", "ce", "PROMETHEIENDPOINT", false, "Promethei endpoint. (default 'http://localhost:8080')")]
+        public string PrometheiEndpoint { get; set; } = "http://localhost:8080";
 
         [Uniform("interval-minutes", "im", "INTERVALMINUTES", true, "time in minutes between checks.")]
         public int IntervalMinutes { get; set; } = 10;

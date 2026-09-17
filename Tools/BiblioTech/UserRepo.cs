@@ -1,4 +1,4 @@
-using ArchivistContractsPlugin;
+using PrometheiContractsPlugin;
 using Discord;
 using GethPlugin;
 using Newtonsoft.Json;

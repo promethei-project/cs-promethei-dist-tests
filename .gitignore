@@ -4,6 +4,6 @@ bin
 .vscode
 Tools/AutoClient/datapath
 .editorconfig
-Tools/ArchivistGatewayService/datapath
+Tools/PrometheiGatewayService/datapath
 Tools/EphemeralClient/volumes
 Tools/ContractDataChecker/docker/volumes

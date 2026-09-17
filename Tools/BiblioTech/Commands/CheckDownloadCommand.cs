@@ -1,25 +1,25 @@
-using BiblioTech.ArchivistChecking;
+using BiblioTech.PrometheiChecking;
 using BiblioTech.Options;
 
 namespace BiblioTech.Commands
 {
     public class CheckDownloadCommand : BaseCommand
     {
-        private readonly ArchivistTwoWayChecker checker;
+        private readonly PrometheiTwoWayChecker checker;
 
         private readonly StringOption contentOption = new StringOption(
             name: "content",
             description: "Content of the downloaded file",
             isRequired: false);
 
-        public CheckDownloadCommand(ArchivistTwoWayChecker checker)
+        public CheckDownloadCommand(PrometheiTwoWayChecker checker)
         {
             this.checker = checker;
         }
 
         public override string Name => "checkdownload";
         public override string StartingMessage => "Connecting to the testnet... Please be patient... " + RandomBusyMessage.Get();
-        public override string Description => "Checks the download connectivity of your Archivist node.";
+        public override string Description => "Checks the download connectivity of your Promethei node.";
         public override CommandOption[] Options => [contentOption];
 
         protected override async Task Invoke(CommandContext context)

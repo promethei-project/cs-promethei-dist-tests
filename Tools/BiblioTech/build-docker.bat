@@ -1,2 +1,2 @@
-docker build -f docker/Dockerfile -t thatbenbierens/archivist-discordbot:initial ../..
-docker push thatbenbierens/archivist-discordbot:initial
+docker build -f docker/Dockerfile -t thatbenbierens/promethei-discordbot:initial ../..
+docker push thatbenbierens/promethei-discordbot:initial

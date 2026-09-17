@@ -23,8 +23,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Framework\ArchivistNetworkConfig\ArchivistNetworkConfig.csproj" />
-	  <ProjectReference Include="..\ArchivistClient\ArchivistClient.csproj" />
+	  <ProjectReference Include="..\..\Framework\PrometheiNetworkConfig\PrometheiNetworkConfig.csproj" />
+	  <ProjectReference Include="..\PrometheiClient\PrometheiClient.csproj" />
 	</ItemGroup>
 
 </Project>

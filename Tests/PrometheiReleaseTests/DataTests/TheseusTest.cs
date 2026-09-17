@@ -1,0 +1,61 @@
+using PrometheiClient;
+using PrometheiPlugin;
+using PrometheiTests;
+using FileUtils;
+using NUnit.Framework;
+using Utils;
+
+namespace PrometheiReleaseTests.DataTests
+{
+    [TestFixture]
+    public class TheseusTest : AutoBootstrapDistTest
+    {
+        private readonly List<IPrometheiNode> nodes = new List<IPrometheiNode>();
+        private TrackedFile file = null!;
+        private ContentId cid = new ContentId();
+
+        [SetUp]
+        public void Setup()
+        {
+            file = GenerateTestFile(10.MB());
+        }
+
+        [Test]
+        [Combinatorial]
+        public void Theseus(
+            [Values(1, 2)] int remainingNodes,
+            [Values(5)] int steps)
+        {
+            Assert.That(remainingNodes, Is.GreaterThan(0));
+            Assert.That(steps, Is.GreaterThan(remainingNodes + 1));
+
+            nodes.AddRange(StartPromethei(remainingNodes + 1));
+            cid = nodes.First().UploadFile(file);
+
+            AllNodesHaveFile();
+
+            for (var i = 0; i < steps; i++)
+            {
+                Log($"{nameof(Theseus)} step {i}");
+                nodes[0].Stop(waitTillStopped: true);
+                nodes.RemoveAt(0);
+
+                nodes.Add(StartPromethei());
+
+                AllNodesHaveFile();
+            }
+        }
+
+        private void AllNodesHaveFile()
+        {
+            Log($"{nameof(AllNodesHaveFile)} {nodes.Names()}");
+            foreach (var n in nodes) HasFile(n);
+        }
+
+        private void HasFile(IPrometheiNode n)
+        {
+            var downloaded = n.DownloadContent(cid);
+            file.AssertIsEqual(downloaded);
+        }
+    }
+}

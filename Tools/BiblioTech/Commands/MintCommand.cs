@@ -1,5 +1,5 @@
 using BiblioTech.Options;
-using ArchivistContractsPlugin;
+using PrometheiContractsPlugin;
 using GethPlugin;
 using Logging;
 using Utils;
@@ -25,7 +25,7 @@ namespace BiblioTech.Commands
         public override string Description => "Transfer and/or mint some TestTokens and Eth to the user if their balance is low.";
         public override CommandOption[] Options => new[] { optionalUser };
 
-        protected override async Task Execute(CommandContext context, IGethNode gethNode, IArchivistContracts contracts)
+        protected override async Task Execute(CommandContext context, IGethNode gethNode, IPrometheiContracts contracts)
         {
             var userId = GetUserFromCommand(optionalUser, context);
             var addr = Program.UserRepo.GetCurrentAddressForUser(userId);
@@ -55,7 +55,7 @@ namespace BiblioTech.Commands
             await context.Followup(reportLine);
         }
 
-        private async Task<Transaction<TestToken>?> ProcessTestTokens(IArchivistContracts contracts, EthAddress addr, List<string> report)
+        private async Task<Transaction<TestToken>?> ProcessTestTokens(IPrometheiContracts contracts, EthAddress addr, List<string> report)
         {
             if (IsTestTokenBalanceOverLimit(contracts, addr))
             {
@@ -85,7 +85,7 @@ namespace BiblioTech.Commands
             return new Transaction<Ether>(eth, 0.Eth(), transaction);
         }
 
-        private async Task<(TestToken, string)> MintTestTokens(IArchivistContracts contracts, EthAddress addr, List<string> report)
+        private async Task<(TestToken, string)> MintTestTokens(IPrometheiContracts contracts, EthAddress addr, List<string> report)
         {
             var nothing = (0.TstWei(), string.Empty);
             if (Program.Config.MintTT < 1)
@@ -110,7 +110,7 @@ namespace BiblioTech.Commands
             return nothing;
         }
 
-        private async Task<(TestToken, string)> TransferTestTokens(IArchivistContracts contracts, EthAddress addr, List<string> report)
+        private async Task<(TestToken, string)> TransferTestTokens(IPrometheiContracts contracts, EthAddress addr, List<string> report)
         {
             var nothing = (0.TstWei(), string.Empty);
             if (Program.Config.SendTT < 1)
@@ -156,7 +156,7 @@ namespace BiblioTech.Commands
             return eth > Program.Config.SendEth.Eth();
         }
 
-        private bool IsTestTokenBalanceOverLimit(IArchivistContracts contracts, EthAddress addr)
+        private bool IsTestTokenBalanceOverLimit(IPrometheiContracts contracts, EthAddress addr)
         {
             var testTokens = contracts.GetTestTokenBalance(addr);
 

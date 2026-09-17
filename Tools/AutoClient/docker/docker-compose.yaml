@@ -1,20 +1,20 @@
 services:
   autoclient:
-    image: durabilitylabs/archivist-autoclient:latest
+    image: durabilitylabs/promethei-autoclient:latest
     pull_policy: always
     restart: always
     container_name: autoclient
     environment:
-      - ARCHIVISTENDPOINTS=
-          http://archivist-1:8080;
-          http://archivist-2:8081;
-          http://archivist-3:8082;
-          # http://archivist-4:8083;
-          # http://archivist-5:8084;
-          # http://archivist-6:8085;
-          # http://archivist-7:8086;
-          # http://archivist-8:8087;
-          # http://archivist-9:8088
+      - PROMETHEIENDPOINTS=
+          http://promethei-1:8080;
+          http://promethei-2:8081;
+          http://promethei-3:8082;
+          # http://promethei-4:8083;
+          # http://promethei-5:8084;
+          # http://promethei-6:8085;
+          # http://promethei-7:8086;
+          # http://promethei-8:8087;
+          # http://promethei-9:8088
       - DATAPATH=/data
       # 5 days, 6.5 days, expressed in minutes:
       - CONTRACTDURATION=14400,16560
@@ -38,15 +38,15 @@ services:
       - 8009:8009
     # network_mode: host
 
-  archivist-1:
-    container_name: archivist-1
+  promethei-1:
+    container_name: promethei-1
     extends:
-      file: archivist-node.yaml
-      service: archivist-base
+      file: nim-promethei-node.yaml
+      service: promethei-base
     environment:
-      - ARCHIVIST_API_PORT=8080
-      - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8070
-      - ARCHIVIST_DISC_PORT=8090
+      - PROMETHEI_API_PORT=8080
+      - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8070
+      - PROMETHEI_DISC_PORT=8090
       # Address: 0x9bc1b45de7a67a064932a4f18a415d0adce4ca56
       - ETH_PRIVATE_KEY=0x7c8ebb5a5c63ba549f7ea44d0f763f37642727ac0d772b8c783ac03ba82b6ea6
     volumes:
@@ -56,15 +56,15 @@ services:
       - 8070:8070/tcp
       - 8090:8090/udp
 
-  archivist-2:
-    container_name: archivist-2
+  promethei-2:
+    container_name: promethei-2
     extends:
-      file: archivist-node.yaml
-      service: archivist-base
+      file: nim-promethei-node.yaml
+      service: promethei-base
     environment:
-      - ARCHIVIST_API_PORT=8081
-      - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8071
-      - ARCHIVIST_DISC_PORT=8091
+      - PROMETHEI_API_PORT=8081
+      - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8071
+      - PROMETHEI_DISC_PORT=8091
       # Address: 0x5a2170d0701e5dc8b8010749c060c0c6035fd262
       - ETH_PRIVATE_KEY=0x26c18f0b03aa1a8e1d5bd4dfec55a4e98204d567790053fcc0ecc6e19d5b63cb
     volumes:
@@ -74,15 +74,15 @@ services:
       - 8071:8071/tcp
       - 8091:8091/udp
 
-  archivist-3:
-    container_name: archivist-3
+  promethei-3:
+    container_name: promethei-3
     extends:
-      file: archivist-node.yaml
-      service: archivist-base
+      file: nim-promethei-node.yaml
+      service: promethei-base
     environment:
-      - ARCHIVIST_API_PORT=8082
-      - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8072
-      - ARCHIVIST_DISC_PORT=8092
+      - PROMETHEI_API_PORT=8082
+      - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8072
+      - PROMETHEI_DISC_PORT=8092
       # Address: 0xd5ae7cd1cac123521ff87746ff97385046f2b9ce
       - ETH_PRIVATE_KEY=0xe531c98df44c5d92e551991a95ae705161c1a5e570003eab87ccebc3cce08f14
     volumes:
@@ -92,15 +92,15 @@ services:
       - 8072:8072/tcp
       - 8092:8092/udp
 
-#  archivist-4:
-#    container_name: archivist-4
+#  promethei-4:
+#    container_name: promethei-4
 #    extends:
-#      file: archivist-node.yaml
-#      service: archivist-base
+#      file: nim-promethei-node.yaml
+#      service: promethei-base
 #    environment:
-#      - ARCHIVIST_API_PORT=8083
-#      - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8073
-#      - ARCHIVIST_DISC_PORT=8093
+#      - PROMETHEI_API_PORT=8083
+#      - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8073
+#      - PROMETHEI_DISC_PORT=8093
 #      # Address: 0x45c3ad9d81bcf83df3621af33d00d768df500995
 #      - ETH_PRIVATE_KEY=0x126c961a9d66d5ba7ad460c2d1b53f5dd070beec3ea956268ba1fac1f4cbfd13
 #    volumes:
@@ -110,15 +110,15 @@ services:
 #      - 8073:8073/tcp
 #      - 8093:8093/udp
 #
-#  archivist-5:
-#    container_name: archivist-5
+#  promethei-5:
+#    container_name: promethei-5
 #    extends:
-#      file: archivist-node.yaml
-#      service: archivist-base
+#      file: nim-promethei-node.yaml
+#      service: promethei-base
 #    environment:
-#      - ARCHIVIST_API_PORT=8084
-#      - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8074
-#      - ARCHIVIST_DISC_PORT=8094
+#      - PROMETHEI_API_PORT=8084
+#      - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8074
+#      - PROMETHEI_DISC_PORT=8094
 #      # Address: 0xe62dde833688a9f1ebfe24299c80d84c94e6ba54
 #      - ETH_PRIVATE_KEY=0xe851fdc9d58f54a03869b236a355f9b639ad6b4de47e1ea0261457bf1791ddc2
 #    volumes:
@@ -128,15 +128,15 @@ services:
 #      - 8074:8074/tcp
 #      - 8094:8094/udp
 #
-  # archivist-6:
-  #   container_name: archivist-6
+  # promethei-6:
+  #   container_name: promethei-6
   #   extends:
-  #     file: archivist-node.yaml
-  #     service: archivist-base
+  #     file: nim-promethei-node.yaml
+  #     service: promethei-base
   #   environment:
-  #     - ARCHIVIST_API_PORT=8085
-  #     - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8075
-  #     - ARCHIVIST_DISC_PORT=8095
+  #     - PROMETHEI_API_PORT=8085
+  #     - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8075
+  #     - PROMETHEI_DISC_PORT=8095
   #     # Address: 0xb9fa41df8abfe2ab0836d4e67f62bc3f2b273636
   #     - ETH_PRIVATE_KEY=0xca5cd2a37851910e7d9d057eae1b4b7dff55ee451b2d07005591d327bbcafe25
   #   volumes:
@@ -146,15 +146,15 @@ services:
   #     - 8075:8075/tcp
   #     - 8095:8095/udp
 
-  # archivist-7:
-  #   container_name: archivist-7
+  # promethei-7:
+  #   container_name: promethei-7
   #   extends:
-  #     file: archivist-node.yaml
-  #     service: archivist-base
+  #     file: nim-promethei-node.yaml
+  #     service: promethei-base
   #   environment:
-  #     - ARCHIVIST_API_PORT=8086
-  #     - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8076
-  #     - ARCHIVIST_DISC_PORT=8096
+  #     - PROMETHEI_API_PORT=8086
+  #     - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8076
+  #     - PROMETHEI_DISC_PORT=8096
   #     # Address: 0x3360b00f7f0a0d8e8dd3a24602c257e6a8f8ea65
   #     - ETH_PRIVATE_KEY=0x736469144b5434e015efc84670bc82ed1379cd7bdcdbb35c47097523c3e3263f
   #   volumes:
@@ -164,15 +164,15 @@ services:
   #     - 8076:8076/tcp
   #     - 8096:8096/udp
 
-  # archivist-8:
-  #   container_name: archivist-8
+  # promethei-8:
+  #   container_name: promethei-8
   #   extends:
-  #     file: archivist-node.yaml
-  #     service: archivist-base
+  #     file: nim-promethei-node.yaml
+  #     service: promethei-base
   #   environment:
-  #     - ARCHIVIST_API_PORT=8087
-  #     - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8077
-  #     - ARCHIVIST_DISC_PORT=8097
+  #     - PROMETHEI_API_PORT=8087
+  #     - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8077
+  #     - PROMETHEI_DISC_PORT=8097
   #     # Address: 0x2aa84fc95d0f9db0695c665dd7e577792baf4b7a
   #     - ETH_PRIVATE_KEY=0x78dadc337f3866457461b9ef85d428755a9bbc6d3af7839d93d69b64d36e033f
   #   volumes:
@@ -182,15 +182,15 @@ services:
   #     - 8077:8077/tcp
   #     - 8097:8097/udp
 
-  # archivist-9:
-  #   container_name: archivist-9
+  # promethei-9:
+  #   container_name: promethei-9
   #   extends:
-  #     file: archivist-node.yaml
-  #     service: archivist-base
+  #     file: nim-promethei-node.yaml
+  #     service: promethei-base
   #   environment:
-  #     - ARCHIVIST_API_PORT=8088
-  #     - ARCHIVIST_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8078
-  #     - ARCHIVIST_DISC_PORT=8098
+  #     - PROMETHEI_API_PORT=8088
+  #     - PROMETHEI_LISTEN_ADDRS=/ip4/0.0.0.0/tcp/8078
+  #     - PROMETHEI_DISC_PORT=8098
   #     # Address: 0xb5eb517850f3afd51b3c54144fe6bf3ce58139bb
   #     - ETH_PRIVATE_KEY=0xa5f79835151b1edc2dea92893e88af04bb95a805fad3cd233bf81df779258dde
   #   volumes:

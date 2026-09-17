@@ -1,4 +1,4 @@
-using ArchivistContractsPlugin;
+using PrometheiContractsPlugin;
 using GethPlugin;
 using Utils;
 

@@ -5,16 +5,16 @@ namespace AutoClient
     public class NodeDispatcher
     {
         private readonly ILog log;
-        private readonly List<ArchivistWrapper> nodes;
+        private readonly List<PrometheiWrapper> nodes;
         private readonly object nodesLock = new object();
 
-        public NodeDispatcher(ILog log, ArchivistWrapper[] nodes)
+        public NodeDispatcher(ILog log, PrometheiWrapper[] nodes)
         {
             this.log = new LogPrefixer(log, "(Dispatch)");
             this.nodes = nodes.ToList();
         }
 
-        public void OnNode(string prefix, Action<ArchivistWrapper> action, Action whenDone)
+        public void OnNode(string prefix, Action<PrometheiWrapper> action, Action whenDone)
         {
             var node = TakeNode();
 
@@ -39,7 +39,7 @@ namespace AutoClient
             });
         }
 
-        private ArchivistWrapper TakeNode()
+        private PrometheiWrapper TakeNode()
         {
             var wait = false;
             while (true)
@@ -49,7 +49,7 @@ namespace AutoClient
                     if (!wait)
                     {
                         wait = true;
-                        log.Log("Waiting for Archivist node to become available...");
+                        log.Log("Waiting for Promethei node to become available...");
                     }
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
@@ -66,7 +66,7 @@ namespace AutoClient
             }
         }
 
-        private void ReleaseNode(ArchivistWrapper node)
+        private void ReleaseNode(PrometheiWrapper node)
         {
             lock (nodesLock)
             {

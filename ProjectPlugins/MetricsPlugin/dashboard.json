@@ -118,7 +118,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistApiUploads_total",
+          "expr": "prometheiApiUploads_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -210,7 +210,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistApiDownloads_total",
+          "expr": "prometheiApiDownloads_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -315,7 +315,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistRepostoreBlocks",
+          "expr": "prometheiRepostoreBlocks",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -408,7 +408,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistRepostoreBytesReserved",
+          "expr": "prometheiRepostoreBytesReserved",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -432,7 +432,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMax": "<ARCHIVIST_BYTESUSED_SOFTMAX>",
+            "axisSoftMax": "<PROMETHEI_BYTESUSED_SOFTMAX>",
             "axisSoftMin": 0,
             "barAlignment": 0,
             "drawStyle": "line",
@@ -469,7 +469,7 @@
               },
               {
                 "color": "red",
-                "value": "<ARCHIVIST_STORAGEQUOTA>"
+                "value": "<PROMETHEI_STORAGEQUOTA>"
               }
             ]
           },
@@ -503,7 +503,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistRepostoreBytesUsed",
+          "expr": "prometheiRepostoreBytesUsed",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -805,7 +805,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistBlockExchangeBlocksSent_total",
+          "expr": "prometheiBlockExchangeBlocksSent_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -897,7 +897,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistBlockExchangeBlocksReceived_total",
+          "expr": "prometheiBlockExchangeBlocksReceived_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -989,7 +989,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistBlockExchangeWantHaveListsSent_total",
+          "expr": "prometheiBlockExchangeWantHaveListsSent_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1081,7 +1081,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistBlockExchangeWantBlockListsSent_total",
+          "expr": "prometheiBlockExchangeWantBlockListsSent_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1173,7 +1173,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistBlockExchangeWantHaveListsReceived_total",
+          "expr": "prometheiBlockExchangeWantHaveListsReceived_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1265,7 +1265,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistBlockExchangeWantBlockListsReceived_total",
+          "expr": "prometheiBlockExchangeWantBlockListsReceived_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1370,7 +1370,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesPending_total",
+          "expr": "prometheiPurchasesPending_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1462,7 +1462,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesSubmitted_total",
+          "expr": "prometheiPurchasesSubmitted_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1554,7 +1554,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesStarted_total",
+          "expr": "prometheiPurchasesStarted_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1646,7 +1646,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesFinished_total",
+          "expr": "prometheiPurchasesFinished_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1738,7 +1738,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesFailed_total",
+          "expr": "prometheiPurchasesFailed_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1830,7 +1830,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesCancelled_total",
+          "expr": "prometheiPurchasesCancelled_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -1922,7 +1922,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesUnknown_total",
+          "expr": "prometheiPurchasesUnknown_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -2014,7 +2014,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "builder",
-          "expr": "archivistPurchasesError_total",
+          "expr": "prometheiPurchasesError_total",
           "instant": false,
           "range": true,
           "refId": "A"
@@ -2057,7 +2057,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Archivist",
+  "title": "Promethei",
   "uid": "ca93f344-dd41-48c4-95a7-876c340e3005",
   "version": 6,
   "weekStart": ""

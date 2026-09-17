@@ -11,11 +11,11 @@
 
 ## Description
 
- The goal of [Distributed System Tests for Archivist node](../../) is to test how [Archivist](https://archivist.storage) works in different topologies in the distributed network and to be able to detect regressions during development.
+ The goal of [Distributed System Tests for Promethei node](../../) is to test how [Promethei](https://archivist.storage) works in different topologies in the distributed network and to be able to detect regressions during development.
 
  We can [run Tests locally](LOCALSETUP.md) and it works well, but in order to scale that we may need to run Tests in an automatic way using remote Kubernetes cluster.
 
- Initially, we are considering to run dist-tests on [archivist-node](https://github.com/durability-labs/archivist-node) main branch merge, to be able to determine regressions. And we also working on [Continuous Tests](Continuous-Tests.md) which are called to detect issues on continuous Archivist runs.
+ Initially, we are considering to run dist-tests on [nim-promethei-node](https://github.com/promethei-project/nim-promethei-node) main branch merge, to be able to determine regressions. And we also working on [Continuous Tests](Continuous-Tests.md) which are called to detect issues on continuous Promethei runs.
 
 
 ## Architecture
@@ -35,7 +35,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
  3. Job run Dist-Tests runner Pod with specified parameters
  4. Dists-Tests runner run the tests from inside the Kubernetes and generate the logs
  5. Vector ship the logs of the Dists-Tests Pods
- 6. Prometheus collect the metrics of the Dists-Tests Archivist Pods
+ 6. Prometheus collect the metrics of the Dists-Tests Promethei Pods
  7. We can see the status of the Dist-Test
 
 
@@ -43,7 +43,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
 
 | Component                               | Description                             |
 | --------------------------------------- | --------------------------------------- |
-| [cs-archivist-dist-tests](/)                | Distributed System Tests                |
+| [cs-promethei-dist-tests](/)                | Distributed System Tests                |
 | [Kubernetes](https://kubernetes.io)     | Environment where we run Tests          |
 | [Vector](https://vector.dev)            | Ship logs to the Elasticsearch          |
 | [Elasticsearch](https://www.elastic.co) | Store and index logs                    |
@@ -116,15 +116,15 @@ GitHub --> CI --> Kubernetes -->  Job                  |
           mountPath: /opt/kubeconfig.yaml
           subPath: kubeconfig.yaml
         - name: logs
-          mountPath: /var/log/cs-archivist-dist-tests
+          mountPath: /var/log/cs-promethei-dist-tests
       restartPolicy: Never
       volumes:
         - name: kubeconfig
           secret:
-            secretName: cs-archivist-dist-tests-app-kubeconfig
+            secretName: cs-promethei-dist-tests-app-kubeconfig
         - name: logs
           hostPath:
-            path: /var/log/cs-archivist-dist-tests
+            path: /var/log/cs-promethei-dist-tests
     ```
     </details>
 
@@ -145,7 +145,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
     ```shell
     folder="/opt/dist-tests"
 
-    git clone https://github.com/durability-labs/cs-archivist-dist-tests.git $folder
+    git clone https://github.com/promethei-project/cs-promethei-dist-tests.git $folder
     cd $folder
     ```
 
@@ -153,7 +153,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
     ```shell
     # RUNNERLOCATION                                  # defined at Pod creation
     # KUBECONFIG                                      # defined at Pod creation
-    export LOGPATH="/var/log/cs-archivist-dist-tests" # Logs from that location will be send in Elasticsearch
+    export LOGPATH="/var/log/cs-promethei-dist-tests" # Logs from that location will be send in Elasticsearch
     export RUNID=$(date +%Y%m%d-%H%M%S)               # Run ID to show in Kibana/Grafana
     export TESTID=$(git rev-parse --short HEAD)       # Test ID to show in Kibana/Grafana
     ```
@@ -170,7 +170,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
     dotnet test LongTests
 
     # Specific test
-    dotnet test --filter=ArchivistLogExample
+    dotnet test --filter=PrometheiLogExample
     ```
 
  6. We can see in OpenLens Pods started by dist-tests app
@@ -180,7 +180,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
 
 ### Run tests automatically
 
- Now we use GitHub Actions to trigger dist-tests run manually and considering to run them on [archivist-node](https://github.com/durability-labs/archivist-node) main branch merge.
+ Now we use GitHub Actions to trigger dist-tests run manually and considering to run them on [nim-promethei-node](https://github.com/promethei-project/nim-promethei-node) main branch merge.
 
  **It works in the following way**
  1. Github Actions secrets contains kubeconfig to interact with the Kubernetes cluster.
@@ -190,7 +190,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
     - `namespace`  - Namespace where Dist-test runner will de created
     - `nameprefix` - Dist-test runner name prefix
 
- 3. Kubernetes Job will run the Pod with a custom [Docker image](/docker/Dockerfile) - [durabilitylabs/cs-archivist-dist-tests](https://hub.docker.com/r/durabilitylabs/cs-archivist-dist-tests/tags).  
+ 3. Kubernetes Job will run the Pod with a custom [Docker image](/docker/Dockerfile) - [durabilitylabs/cs-promethei-dist-tests](https://hub.docker.com/r/durabilitylabs/cs-promethei-dist-tests/tags).  
   Image [entrypoint](/docker/docker-entrypoint.sh) is customizable and we can pass the following variables
     - `SOURCE` - Dist-tests source repository, useful when we work with forks - `default="current repository"`
     - `BRANCH` - Repository branch, useful when we would like to run tests from the custom branch - `default="main"`
@@ -202,7 +202,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
     ```shell
     RUNNERLOCATION=InternalToCluster
     KUBECONFIG=/opt/kubeconfig.yaml
-    LOGPATH=/var/log/cs-archivist-dist-tests
+    LOGPATH=/var/log/cs-promethei-dist-tests
     NAMESPACE=default
     SOURCE=current repository
     BRANCH=main
@@ -212,7 +212,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
 
  5. Dist-tests runner will use [kubeconfig to interact with the Kubernetes and run the tests](../../../issues/21), which is set by `KUBECONFIG` variable.
 
- 6. Runner will execute all tests and will write the logs to the `/var/log/cs-archivist-dist-tests` folder.
+ 6. Runner will execute all tests and will write the logs to the `/var/log/cs-promethei-dist-tests` folder.
 
  7. Kubernetes Job status will be changed from `Running` to the `Completed` or `Failed`.
 
@@ -225,7 +225,7 @@ GitHub --> CI --> Kubernetes -->  Job                  |
 
  > **Note:** This part is not finished yet and it is under development
 
- We use Elasticsearch to store and discover the logs of the tests execution and Archivist Pods which are run during the tests.
+ We use Elasticsearch to store and discover the logs of the tests execution and Promethei Pods which are run during the tests.
 
  We can use [Kibana](#kibana) to discover all the logs and [Grafana](#grafana) to see tests execution status.
 

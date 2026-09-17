@@ -1,12 +1,12 @@
 using System.Numerics;
 using BlockchainUtils;
-using ArchivistContractsPlugin.ChainMonitor;
-using ArchivistContractsPlugin.Marketplace;
+using PrometheiContractsPlugin.ChainMonitor;
+using PrometheiContractsPlugin.Marketplace;
 using Logging;
 using Newtonsoft.Json;
 using Utils;
 using Nethereum.Hex.HexConvertors.Extensions;
-using ArchivistNetworkConfig;
+using PrometheiNetworkConfig;
 
 namespace TraceContract
 {
@@ -35,7 +35,7 @@ namespace TraceContract
         private readonly List<Entry> entries = new();
         private readonly string folder;
 
-        public Output(ILog log, Input input, Config config, ArchivistNetwork network)
+        public Output(ILog log, Input input, Config config, PrometheiNetwork network)
         {
             folder = config.OuputFolder;
             Directory.CreateDirectory(folder);

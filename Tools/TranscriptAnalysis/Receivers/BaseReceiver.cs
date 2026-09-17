@@ -1,4 +1,4 @@
-using ArchivistPlugin.OverwatchSupport;
+using PrometheiPlugin.OverwatchSupport;
 using Logging;
 using OverwatchTranscript;
 
@@ -7,7 +7,7 @@ namespace TranscriptAnalysis.Receivers
     public abstract class BaseReceiver<T> : IEventReceiver<T>
     {
         protected ILog log { get; private set; } = new NullLog();
-        protected OverwatchArchivistHeader Header { get; private set; } = null!;
+        protected OverwatchPrometheiHeader Header { get; private set; } = null!;
         protected CsvWriter CsvWriter { get; private set; }
         protected string SourceFilename { get; private set; } = string.Empty;
 
@@ -20,7 +20,7 @@ namespace TranscriptAnalysis.Receivers
             CsvWriter = new CsvWriter(log);
         }
 
-        public void Init(string sourceFilename, ILog log, OverwatchArchivistHeader header)
+        public void Init(string sourceFilename, ILog log, OverwatchPrometheiHeader header)
         {
             this.log = new LogPrefixer(log, $"({Name}) ");
             Header = header;
@@ -37,7 +37,7 @@ namespace TranscriptAnalysis.Receivers
             return GetIdentity(nodeIndex)?.Name;
         }
 
-        protected ArchivistNodeIdentity? GetIdentity(int nodeIndex)
+        protected PrometheiNodeIdentity? GetIdentity(int nodeIndex)
         {
             if (nodeIndex < 0) return null;
             return Header.Nodes[nodeIndex];

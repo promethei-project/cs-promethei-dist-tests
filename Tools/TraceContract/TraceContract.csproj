@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\ArchivistNetworkConfig\ArchivistNetworkConfig.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistContractsPlugin\ArchivistContractsPlugin.csproj" />
+    <ProjectReference Include="..\..\Framework\PrometheiNetworkConfig\PrometheiNetworkConfig.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiContractsPlugin\PrometheiContractsPlugin.csproj" />
   </ItemGroup>
 
 </Project>

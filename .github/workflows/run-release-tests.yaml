@@ -4,8 +4,8 @@ name: Run Release Tests
 on:
   workflow_dispatch:
     inputs:
-      archivistdockerimage:
-        description: "Archivist Docker image (example: 'durabilitylabs/archivist-node:0.0.1-dist-tests')"
+      prometheidockerimage:
+        description: "Promethei Docker image (example: 'durabilitylabs/nim-promethei-node:0.0.1-dist-tests')"
         required: true
         type: string
       runner_image:
@@ -20,15 +20,15 @@ on:
         description: Default pull policy for child test deployments
         required: false
         type: string
-      archivist_image_pull_policy:
-        description: Pull policy override for Archivist node deployments
+      promethei_image_pull_policy:
+        description: Pull policy override for Promethei node deployments
         required: false
         type: string
-      archivist_contracts_image:
+      promethei_contracts_image:
         description: Contracts image override
         required: false
         type: string
-      archivist_contracts_image_pull_policy:
+      promethei_contracts_image_pull_policy:
         description: Pull policy override for contracts deployments
         required: false
         type: string
@@ -48,19 +48,19 @@ on:
         description: Pull policy override for Prometheus deployments
         required: false
         type: string
-      archivist_discordbot_image:
+      promethei_discordbot_image:
         description: Discord bot image override
         required: false
         type: string
-      archivist_discordbot_image_pull_policy:
+      promethei_discordbot_image_pull_policy:
         description: Pull policy override for Discord bot deployments
         required: false
         type: string
-      archivist_rewarderbot_image:
+      promethei_rewarderbot_image:
         description: Rewarder bot image override
         required: false
         type: string
-      archivist_rewarderbot_image_pull_policy:
+      promethei_rewarderbot_image_pull_policy:
         description: Pull policy override for rewarder bot deployments
         required: false
         type: string
@@ -79,8 +79,8 @@ on:
         description: Branch with tests (main)
         required: false
         type: string
-      archivistdockerimage:
-        description: "Archivist Docker image (example: 'durabilitylabs/archivist-node:0.0.1-dist-tests')"
+      prometheidockerimage:
+        description: "Promethei Docker image (example: 'durabilitylabs/nim-promethei-node:0.0.1-dist-tests')"
         required: true
         type: string
       runner_image:
@@ -95,15 +95,15 @@ on:
         description: Default pull policy for child test deployments
         required: false
         type: string
-      archivist_image_pull_policy:
-        description: Pull policy override for Archivist node deployments
+      promethei_image_pull_policy:
+        description: Pull policy override for Promethei node deployments
         required: false
         type: string
-      archivist_contracts_image:
+      promethei_contracts_image:
         description: Contracts image override
         required: false
         type: string
-      archivist_contracts_image_pull_policy:
+      promethei_contracts_image_pull_policy:
         description: Pull policy override for contracts deployments
         required: false
         type: string
@@ -123,19 +123,19 @@ on:
         description: Pull policy override for Prometheus deployments
         required: false
         type: string
-      archivist_discordbot_image:
+      promethei_discordbot_image:
         description: Discord bot image override
         required: false
         type: string
-      archivist_discordbot_image_pull_policy:
+      promethei_discordbot_image_pull_policy:
         description: Pull policy override for Discord bot deployments
         required: false
         type: string
-      archivist_rewarderbot_image:
+      promethei_rewarderbot_image:
         description: Rewarder bot image override
         required: false
         type: string
-      archivist_rewarderbot_image_pull_policy:
+      promethei_rewarderbot_image_pull_policy:
         description: Pull policy override for rewarder bot deployments
         required: false
         type: string
@@ -156,26 +156,26 @@ on:
 env:
   SOURCE: ${{ format('{0}/{1}', github.server_url, github.repository) }}
   BRANCH: ${{ github.ref_name }}
-  RUNNER_IMAGE: durabilitylabs/cs-archivist-dist-tests:latest
+  RUNNER_IMAGE: durabilitylabs/cs-promethei-dist-tests:latest
   RUNNER_IMAGE_PULL_POLICY: Always
   IMAGE_PULL_POLICY: Always
-  ARCHIVISTDOCKERIMAGE: durabilitylabs/archivist-node:latest-dist-tests
-  ARCHIVIST_IMAGE_PULL_POLICY: ''
-  ARCHIVIST_CONTRACTS_IMAGE: ''
-  ARCHIVIST_CONTRACTS_IMAGE_PULL_POLICY: ''
+  PROMETHEIDOCKERIMAGE: durabilitylabs/nim-promethei-node:latest-dist-tests
+  PROMETHEI_IMAGE_PULL_POLICY: ''
+  PROMETHEI_CONTRACTS_IMAGE: ''
+  PROMETHEI_CONTRACTS_IMAGE_PULL_POLICY: ''
   GETH_DOCKER_IMAGE: ''
   GETH_IMAGE_PULL_POLICY: ''
   PROMETHEUS_DOCKER_IMAGE: ''
   PROMETHEUS_IMAGE_PULL_POLICY: ''
-  ARCHIVIST_DISCORDBOT_IMAGE: ''
-  ARCHIVIST_DISCORDBOT_IMAGE_PULL_POLICY: ''
-  ARCHIVIST_REWARDERBOT_IMAGE: ''
-  ARCHIVIST_REWARDERBOT_IMAGE_PULL_POLICY: ''
+  PROMETHEI_DISCORDBOT_IMAGE: ''
+  PROMETHEI_DISCORDBOT_IMAGE_PULL_POLICY: ''
+  PROMETHEI_REWARDERBOT_IMAGE: ''
+  PROMETHEI_REWARDERBOT_IMAGE_PULL_POLICY: ''
   TEST_TYPE: release-tests
   NAMEPREFIX: r-tests
   NAMESPACE: ${{ inputs.namespace || 'devnet' }}
   JOB_MANIFEST: docker/job-release-tests.yaml
-  COMMAND: dotnet test Tests/ArchivistReleaseTests
+  COMMAND: dotnet test Tests/PrometheiReleaseTests
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   KUBE_VERSION: v1.30.5
 
@@ -218,18 +218,18 @@ jobs:
           set_from_input RUNNER_IMAGE "${{ inputs.runner_image }}" "${{ env.RUNNER_IMAGE }}"
           set_from_input RUNNER_IMAGE_PULL_POLICY "${{ inputs.runner_image_pull_policy }}" "${{ env.RUNNER_IMAGE_PULL_POLICY }}"
           set_from_input IMAGE_PULL_POLICY "${{ inputs.image_pull_policy }}" "${{ env.IMAGE_PULL_POLICY }}"
-          set_from_input ARCHIVISTDOCKERIMAGE "${{ inputs.archivistdockerimage }}" "${{ env.ARCHIVISTDOCKERIMAGE }}"
-          set_from_input ARCHIVIST_IMAGE_PULL_POLICY "${{ inputs.archivist_image_pull_policy }}" "${{ env.ARCHIVIST_IMAGE_PULL_POLICY }}"
-          set_from_input ARCHIVIST_CONTRACTS_IMAGE "${{ inputs.archivist_contracts_image }}" "${{ env.ARCHIVIST_CONTRACTS_IMAGE }}"
-          set_from_input ARCHIVIST_CONTRACTS_IMAGE_PULL_POLICY "${{ inputs.archivist_contracts_image_pull_policy }}" "${{ env.ARCHIVIST_CONTRACTS_IMAGE_PULL_POLICY }}"
+          set_from_input PROMETHEIDOCKERIMAGE "${{ inputs.prometheidockerimage }}" "${{ env.PROMETHEIDOCKERIMAGE }}"
+          set_from_input PROMETHEI_IMAGE_PULL_POLICY "${{ inputs.promethei_image_pull_policy }}" "${{ env.PROMETHEI_IMAGE_PULL_POLICY }}"
+          set_from_input PROMETHEI_CONTRACTS_IMAGE "${{ inputs.promethei_contracts_image }}" "${{ env.PROMETHEI_CONTRACTS_IMAGE }}"
+          set_from_input PROMETHEI_CONTRACTS_IMAGE_PULL_POLICY "${{ inputs.promethei_contracts_image_pull_policy }}" "${{ env.PROMETHEI_CONTRACTS_IMAGE_PULL_POLICY }}"
           set_from_input GETH_DOCKER_IMAGE "${{ inputs.geth_docker_image }}" "${{ env.GETH_DOCKER_IMAGE }}"
           set_from_input GETH_IMAGE_PULL_POLICY "${{ inputs.geth_image_pull_policy }}" "${{ env.GETH_IMAGE_PULL_POLICY }}"
           set_from_input PROMETHEUS_DOCKER_IMAGE "${{ inputs.prometheus_docker_image }}" "${{ env.PROMETHEUS_DOCKER_IMAGE }}"
           set_from_input PROMETHEUS_IMAGE_PULL_POLICY "${{ inputs.prometheus_image_pull_policy }}" "${{ env.PROMETHEUS_IMAGE_PULL_POLICY }}"
-          set_from_input ARCHIVIST_DISCORDBOT_IMAGE "${{ inputs.archivist_discordbot_image }}" "${{ env.ARCHIVIST_DISCORDBOT_IMAGE }}"
-          set_from_input ARCHIVIST_DISCORDBOT_IMAGE_PULL_POLICY "${{ inputs.archivist_discordbot_image_pull_policy }}" "${{ env.ARCHIVIST_DISCORDBOT_IMAGE_PULL_POLICY }}"
-          set_from_input ARCHIVIST_REWARDERBOT_IMAGE "${{ inputs.archivist_rewarderbot_image }}" "${{ env.ARCHIVIST_REWARDERBOT_IMAGE }}"
-          set_from_input ARCHIVIST_REWARDERBOT_IMAGE_PULL_POLICY "${{ inputs.archivist_rewarderbot_image_pull_policy }}" "${{ env.ARCHIVIST_REWARDERBOT_IMAGE_PULL_POLICY }}"
+          set_from_input PROMETHEI_DISCORDBOT_IMAGE "${{ inputs.promethei_discordbot_image }}" "${{ env.PROMETHEI_DISCORDBOT_IMAGE }}"
+          set_from_input PROMETHEI_DISCORDBOT_IMAGE_PULL_POLICY "${{ inputs.promethei_discordbot_image_pull_policy }}" "${{ env.PROMETHEI_DISCORDBOT_IMAGE_PULL_POLICY }}"
+          set_from_input PROMETHEI_REWARDERBOT_IMAGE "${{ inputs.promethei_rewarderbot_image }}" "${{ env.PROMETHEI_REWARDERBOT_IMAGE }}"
+          set_from_input PROMETHEI_REWARDERBOT_IMAGE_PULL_POLICY "${{ inputs.promethei_rewarderbot_image_pull_policy }}" "${{ env.PROMETHEI_REWARDERBOT_IMAGE_PULL_POLICY }}"
           [[ -n "${{ inputs.nameprefix }}" ]] && NAMEPREFIX="`awk '{ print tolower($0) }' <<< ${{ inputs.nameprefix }}`" || NAMEPREFIX="`awk '{ print tolower($0) }' <<< ${{ env.NAMEPREFIX }}`"
           echo "NAMEPREFIX=${NAMEPREFIX}-${RUNID}" >>"$GITHUB_ENV"
           set_from_input NAMESPACE "${{ inputs.namespace }}" "${{ env.NAMESPACE }}"

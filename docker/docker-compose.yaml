@@ -4,7 +4,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     environment:
-      - ARCHIVISTDOCKERIMAGE=durabilitylabs/archivist-node:latest-dist-tests
+      - PROMETHEIDOCKERIMAGE=durabilitylabs/nim-promethei-node:latest-dist-tests
       - BRANCH=main
       - KUBECONFIG=/opt/kubeconfig
       - LOGPATH=/opt/logs

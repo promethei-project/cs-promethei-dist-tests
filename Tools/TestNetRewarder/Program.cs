@@ -1,5 +1,5 @@
-using ArchivistContractsPlugin;
-using ArchivistNetworkConfig;
+using PrometheiContractsPlugin;
+using PrometheiNetworkConfig;
 using ArgsUniform;
 using BlockchainUtils;
 using ChainFollowingApp;
@@ -26,7 +26,7 @@ namespace TestNetRewarder
                 )
             );
 
-            var networkConnector = new ArchivistNetworkConnector(log);
+            var networkConnector = new PrometheiNetworkConnector(log);
             var network = networkConnector.GetConfig();
 
             var diskStore = new DiskBlockBucketStore(log, Path.Join(config.DataPath, "blockcache"));
@@ -39,12 +39,12 @@ namespace TestNetRewarder
             var lookup = new ContentInformationLookup(config, network);
             var botClient = new BotClient(config.DiscordHost, config.DiscordPort, log);
 
-            var eventsFormatter = new EventsFormatter(lookup, connector.ArchivistContracts.Deployment.Config);
+            var eventsFormatter = new EventsFormatter(lookup, connector.PrometheiContracts.Deployment.Config);
             var periodMonitorHandler = new PeriodMonitorHandler(eventsFormatter);
 
             var hooks = new ChainFollowHooksHandler(log, config, eventsFormatter, builder, botClient, ct);
 
-            var followConfig = new ChainFollowConfig(log, config.Interval, config.HistoryStartUtc, connector.GethNode, connector.ArchivistContracts, requestsCache);
+            var followConfig = new ChainFollowConfig(log, config.Interval, config.HistoryStartUtc, connector.GethNode, connector.PrometheiContracts, requestsCache);
             var handlers = new ChainFollowHandlers(hooks, eventsFormatter, config.ShowProofsMissed > 0 ? periodMonitorHandler : null);
 
             var chainFollower = new ChainFollowing(followConfig, handlers);

@@ -1,7 +1,7 @@
-﻿using ArchivistClient;
-using ArchivistContractsPlugin;
-using ArchivistContractsPlugin.ChainMonitor;
-using ArchivistNetworkConfig;
+﻿using PrometheiClient;
+using PrometheiContractsPlugin;
+using PrometheiContractsPlugin.ChainMonitor;
+using PrometheiNetworkConfig;
 using ArgsUniform;
 using BlockchainUtils;
 using ChainFollowingApp;
@@ -34,8 +34,8 @@ public class Program
          )), "(CDT)");
 
         log.Log("  --  [[ Contract Data Tester ]]  --");
-        log.Log("Getting Archivist network configuration...");
-        var netConnector = new ArchivistNetworkConnector(log);
+        log.Log("Getting Promethei network configuration...");
+        var netConnector = new PrometheiNetworkConnector(log);
         var network = netConnector.GetConfig();
 
         AddKnownHostsLogReplacements(log, network);
@@ -47,27 +47,27 @@ public class Program
         var rpcConnector = GethConnector.GethConnector.Initialize(log, network, blockCache, requestsCache);
         if (rpcConnector == null) throw new Exception("Invalid Eth RPC information");
 
-        log.Log("Creating Archivist client instance...");
-        var factory = new ArchivistNodeFactory(log, "datadir");
-        var endpoint = config.ArchivistEndpoint;
+        log.Log("Creating Promethei client instance...");
+        var factory = new PrometheiNodeFactory(log, "datadir");
+        var endpoint = config.PrometheiEndpoint;
         var splitIndex = endpoint.LastIndexOf(':');
         var host = endpoint.Substring(0, splitIndex);
         var port = Convert.ToInt32(endpoint.Substring(splitIndex + 1));
-        var instance = ArchivistInstance.CreateFromApiEndpoint(
+        var instance = PrometheiInstance.CreateFromApiEndpoint(
             "node",
             new Utils.Address("node", host, port)
         );
-        var archivistNode = factory.CreateArchivistNode(instance);
+        var prometheiNode = factory.CreatePrometheiNode(instance);
 
         chainFollower = new ChainFollowing(new ChainFollowConfig(
             log,
             config.Interval,
             config.HistoryStartUtc,
             rpcConnector.GethNode,
-            rpcConnector.ArchivistContracts,
+            rpcConnector.PrometheiContracts,
             requestsCache
         ), new ChainFollowHandlers(
-            new DataChecker(log, config, archivistNode),
+            new DataChecker(log, config, prometheiNode),
             new DoNothingChainEventHandler(),
             null
         ));
@@ -75,7 +75,7 @@ public class Program
         log.Log("Activating chain-follower...");
     }
 
-    private void AddKnownHostsLogReplacements(ILog log, ArchivistNetwork network)
+    private void AddKnownHostsLogReplacements(ILog log, PrometheiNetwork network)
     {
         foreach (var nodeGroup in network.Team.Nodes)
         {
@@ -86,7 +86,7 @@ public class Program
         }
     }
 
-    private void AddKnownHostLogReplacement(ArchivistNetworkTeamNodesVersionsInstancesEntry instance, ILog log)
+    private void AddKnownHostLogReplacement(PrometheiNetworkTeamNodesVersionsInstancesEntry instance, ILog log)
     {
         if (string.IsNullOrEmpty(instance.EthAddress)) return;
         if (string.IsNullOrEmpty(instance.Name)) return;

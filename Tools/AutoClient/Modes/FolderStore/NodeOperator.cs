@@ -1,4 +1,4 @@
-﻿using ArchivistClient;
+﻿using PrometheiClient;
 using Logging;
 
 namespace AutoClient.Modes.FolderStore
@@ -56,11 +56,11 @@ namespace AutoClient.Modes.FolderStore
         public class NodeAction
         {
             private readonly ILog log;
-            private readonly ArchivistWrapper node;
+            private readonly PrometheiWrapper node;
             private readonly FileStatus entry;
             private readonly IAppEventHandler appEventHandler;
 
-            public NodeAction(ILog log, ArchivistWrapper node, FileStatus entry, IAppEventHandler appEventHandler)
+            public NodeAction(ILog log, PrometheiWrapper node, FileStatus entry, IAppEventHandler appEventHandler)
             {
                 this.log = log;
                 this.node = node;

@@ -2,14 +2,14 @@
 
 # Variables
 ## Common
-SOURCE="${SOURCE:-https://github.com/durability-labs/cs-archivist-dist-tests.git}"
+SOURCE="${SOURCE:-https://github.com/promethei-project/cs-promethei-dist-tests.git}"
 BRANCH="${BRANCH:-main}"
-FOLDER="${FOLDER:-/opt/cs-archivist-dist-tests}"
+FOLDER="${FOLDER:-/opt/cs-promethei-dist-tests}"
 
 ## Tests specific
-DEPLOYMENT_ARCHIVISTNETDEPLOYER_PATH="${DEPLOYMENT_ARCHIVISTNETDEPLOYER_PATH:-Tools/ArchivistNetDeployer}"
-DEPLOYMENT_ARCHIVISTNETDEPLOYER_RUNNER="${DEPLOYMENT_ARCHIVISTNETDEPLOYER_RUNNER:-deploy-continuous-testnet.sh}"
-CONTINUOUS_TESTS_FOLDER="${CONTINUOUS_TESTS_FOLDER:-Tests/ArchivistContinuousTests}"
+DEPLOYMENT_PROMETHEINETDEPLOYER_PATH="${DEPLOYMENT_PROMETHEINETDEPLOYER_PATH:-Tools/PrometheiNetDeployer}"
+DEPLOYMENT_PROMETHEINETDEPLOYER_RUNNER="${DEPLOYMENT_PROMETHEINETDEPLOYER_RUNNER:-deploy-continuous-testnet.sh}"
+CONTINUOUS_TESTS_FOLDER="${CONTINUOUS_TESTS_FOLDER:-Tests/PrometheiContinuousTests}"
 CONTINUOUS_TESTS_RUNNER="${CONTINUOUS_TESTS_RUNNER:-run.sh}"
 
 # Get code

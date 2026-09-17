@@ -1,6 +1,0 @@
-@ArchivistGatewayService_HostAddress = http://localhost:5191
-
-GET {{ArchivistGatewayService_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: promethei-test-namespace
+  labels:
+    name: promethei-test-namespace
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promethei-demo
+  namespace: promethei-test-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      nim-promethei-node: dist-test
+  template:
+    metadata:
+      labels:
+        nim-promethei-node: dist-test
+    spec:
+      containers:
+      - name: nim-promethei-node1
+        image: durabilitylabs/nim-promethei-node:sha-9817b12
+        ports:
+        - containerPort: 8080
+          name: api-1
+        env:
+        - name: API_PORT
+          value: "8080"
+        - name: DATA_DIR
+          value: datadir1
+        - name: DISC_PORT
+          value: "8081"
+        - name: LISTEN_ADDRS
+          value: "/ip4/0.0.0.0/tcp/8082"
+      - name: nim-promethei-node2
+        image: durabilitylabs/nim-promethei-node:sha-9817b12
+        ports:
+        - containerPort: 8083
+          name: api-2
+        env:
+        - name: API_PORT
+          value: "8083"
+        - name: DATA_DIR
+          value: datadir2
+        - name: DISC_PORT
+          value: "8084"
+        - name: LISTEN_ADDRS
+          value: "/ip4/0.0.0.0/tcp/8085"
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: promethei-entrypoint
+  namespace: promethei-test-namespace
+spec:
+  type: NodePort
+  selector:
+    nim-promethei-node: dist-test
+  ports:
+  - name: "node1"
+    protocol: TCP
+    port: 8080
+    targetPort: api-1
+    nodePort: 30001
+  - name: "node2"
+    protocol: TCP
+    port: 8083
+    targetPort: api-2
+    nodePort: 30002
+

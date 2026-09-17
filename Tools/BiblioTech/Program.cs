@@ -1,6 +1,6 @@
-using ArchivistNetworkConfig;
+using PrometheiNetworkConfig;
 using ArgsUniform;
-using BiblioTech.ArchivistChecking;
+using BiblioTech.PrometheiChecking;
 using BiblioTech.Commands;
 using BiblioTech.Rewards;
 using Discord;
@@ -22,7 +22,7 @@ namespace BiblioTech
         public static ChainActivityHandler ChainActivityHandler { get; set; } = null!;
         public static ChainEventsSender EventsSender { get; set; } = null!;
         public static ILog Log { get; private set; } = null!;
-        public static ArchivistNetwork Network { get; private set; } = null!;
+        public static PrometheiNetwork Network { get; private set; } = null!;
         public static GethLink? GethLink { get; private set; } = null;
 
         public static Task Main(string[] args)
@@ -50,7 +50,7 @@ namespace BiblioTech
 
         public async Task MainAsync(string[] args)
         {
-            Log.Log("Starting Archivist Discord Bot...");
+            Log.Log("Starting Promethei Discord Bot...");
             try
             {
                 replacement = new CustomReplacement(Config);
@@ -94,8 +94,8 @@ namespace BiblioTech
             client.Log += ClientLog;
 
             var checkRepo = new CheckRepo(Log, Config);
-            var archivistWrapper = new ArchivistWrapper(Log, Config);
-            var checker = new ArchivistTwoWayChecker(Log, Config, checkRepo, archivistWrapper);
+            var prometheiWrapper = new PrometheiWrapper(Log, Config);
+            var checker = new PrometheiTwoWayChecker(Log, Config, checkRepo, prometheiWrapper);
             var notifyCommand = new NotifyCommand();
             var associateCommand = new UserAssociateCommand(notifyCommand);
             var roleRemover = new ActiveP2pRoleRemover(Config, Log, checkRepo);
@@ -116,7 +116,7 @@ namespace BiblioTech
 
         private static void PrintHelp()
         {
-            Log.Log("BiblioTech - Archivist Discord Bot");
+            Log.Log("BiblioTech - Promethei Discord Bot");
         }
 
         private Task ClientLog(LogMessage msg)
@@ -131,9 +131,9 @@ namespace BiblioTech
             Directory.CreateDirectory(path);
         }
 
-        private static ArchivistNetwork FetchNetworkConfig()
+        private static PrometheiNetwork FetchNetworkConfig()
         {
-            var connector = new ArchivistNetworkConnector(Log);
+            var connector = new PrometheiNetworkConnector(Log);
             return connector.GetConfig();
         }
 

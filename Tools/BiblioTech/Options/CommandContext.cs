@@ -56,7 +56,7 @@ namespace BiblioTech.Options
             var filename = Guid.NewGuid().ToString() + ".tmp";
             File.WriteAllText(filename, fileContent);
 
-            await Command.FollowupWithFileAsync(filename, "Archivist_UploadCheckFile.txt", text: message, ephemeral: true);
+            await Command.FollowupWithFileAsync(filename, "Promethei_UploadCheckFile.txt", text: message, ephemeral: true);
 
             // Detached task for cleaning up the stream resources.
             _ = Task.Run(() =>

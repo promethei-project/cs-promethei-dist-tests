@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Logging\Logging.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistContractsPlugin\ArchivistContractsPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiContractsPlugin\PrometheiContractsPlugin.csproj" />
     <ProjectReference Include="..\..\ProjectPlugins\GethPlugin\GethPlugin.csproj" />
   </ItemGroup>
 

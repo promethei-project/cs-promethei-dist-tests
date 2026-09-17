@@ -1,5 +1,5 @@
-using ArchivistContractsPlugin;
-using ArchivistContractsPlugin.ChainMonitor;
+using PrometheiContractsPlugin;
+using PrometheiContractsPlugin.ChainMonitor;
 using Logging;
 using Utils;
 

@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\ArchivistNetworkConfig\ArchivistNetworkConfig.csproj" />
+    <ProjectReference Include="..\..\Framework\PrometheiNetworkConfig\PrometheiNetworkConfig.csproj" />
     <ProjectReference Include="..\..\Framework\ArgsUniform\ArgsUniform.csproj" />
     <ProjectReference Include="..\..\Framework\BlockchainUtils\BlockchainUtils.csproj" />
     <ProjectReference Include="..\..\Framework\ChainFollowingApp\ChainFollowingApp.csproj" />
     <ProjectReference Include="..\..\Framework\GethConnector\GethConnector.csproj" />
     <ProjectReference Include="..\..\Framework\Logging\Logging.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistContractsPlugin\ArchivistContractsPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiContractsPlugin\PrometheiContractsPlugin.csproj" />
   </ItemGroup>
 
 </Project>

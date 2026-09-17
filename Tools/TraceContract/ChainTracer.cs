@@ -1,5 +1,5 @@
-using ArchivistContractsPlugin;
-using ArchivistContractsPlugin.ChainMonitor;
+using PrometheiContractsPlugin;
+using PrometheiContractsPlugin.ChainMonitor;
 using BlockchainUtils;
 using GethPlugin;
 using Logging;
@@ -12,11 +12,11 @@ namespace TraceContract
         private readonly ILog log;
         private readonly ILog baseLog;
         private readonly IGethNode geth;
-        private readonly IArchivistContracts contracts;
+        private readonly IPrometheiContracts contracts;
         private readonly Input input;
         private readonly Output output;
 
-        public ChainTracer(ILog log, ILog baseLog, IGethNode geth, IArchivistContracts contracts, Input input, Output output)
+        public ChainTracer(ILog log, ILog baseLog, IGethNode geth, IPrometheiContracts contracts, Input input, Output output)
         {
             this.log = log;
             this.baseLog = baseLog;

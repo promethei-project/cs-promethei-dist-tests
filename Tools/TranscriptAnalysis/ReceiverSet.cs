@@ -1,4 +1,4 @@
-using ArchivistPlugin.OverwatchSupport;
+using PrometheiPlugin.OverwatchSupport;
 using Logging;
 using OverwatchTranscript;
 using TranscriptAnalysis.Receivers;
@@ -7,7 +7,7 @@ namespace TranscriptAnalysis
 {
     public interface IEventReceiver
     {
-        void Init(string sourceFilename, ILog log, OverwatchArchivistHeader header);
+        void Init(string sourceFilename, ILog log, OverwatchPrometheiHeader header);
         void Finish();
     }
 
@@ -21,10 +21,10 @@ namespace TranscriptAnalysis
         private readonly string sourceFilename;
         private readonly ILog log;
         private readonly ITranscriptReader reader;
-        private readonly OverwatchArchivistHeader header;
+        private readonly OverwatchPrometheiHeader header;
         private readonly List<IEventReceiver> receivers = new List<IEventReceiver>();
 
-        public ReceiverSet(string sourceFilename, ILog log, ITranscriptReader reader, OverwatchArchivistHeader header)
+        public ReceiverSet(string sourceFilename, ILog log, ITranscriptReader reader, OverwatchPrometheiHeader header)
         {
             this.sourceFilename = sourceFilename;
             this.log = log;

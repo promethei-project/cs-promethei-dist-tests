@@ -1,5 +1,5 @@
-using ArchivistContractsPlugin;
-using ArchivistContractsPlugin.ChainMonitor;
+using PrometheiContractsPlugin;
+using PrometheiContractsPlugin.ChainMonitor;
 using GethPlugin;
 using Logging;
 
@@ -16,7 +16,7 @@ namespace ChainFollowingApp
 
     public class ChainFollowConfig
     {
-        public ChainFollowConfig(ILog log, TimeSpan updateInterval, DateTime historyStartUtc, IGethNode rpcNode, IArchivistContracts contracts, IRequestsCache requestsCache)
+        public ChainFollowConfig(ILog log, TimeSpan updateInterval, DateTime historyStartUtc, IGethNode rpcNode, IPrometheiContracts contracts, IRequestsCache requestsCache)
         {
             Log = log;
             UpdateInterval = updateInterval;
@@ -30,7 +30,7 @@ namespace ChainFollowingApp
         public TimeSpan UpdateInterval { get; }
         public DateTime HistoryStartUtc { get; }
         public IGethNode RpcNode { get; }
-        public IArchivistContracts Contracts { get; }
+        public IPrometheiContracts Contracts { get; }
         public IRequestsCache RequestsCache { get; }
     }
 

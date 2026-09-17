@@ -1,4 +1,4 @@
-# Distributed System Tests for Archivist node
+# Distributed System Tests for Promethei node
 
 ## Local setup
 These steps will help you set up everything you need to run and debug the tests on your local system.
@@ -10,4 +10,4 @@ These steps will help you set up everything you need to run and debug the tests 
 1. In the docker-desktop settings, enable kubernetes. (This might take a few minutes.)
 
 ### Running the tests
-Most IDEs will let you run individual tests or test fixtures straight from the code file. If you want to run all the tests, you can use `dotnet test`. You can control which tests to run by specifying which folder of tests to run. `dotnet test Tests/ArchivistTests` will run only the tests in `/Tests/ArchivistTests` and exclude the long tests.
+Most IDEs will let you run individual tests or test fixtures straight from the code file. If you want to run all the tests, you can use `dotnet test`. You can control which tests to run by specifying which folder of tests to run. `dotnet test Tests/PrometheiTests` will run only the tests in `/Tests/PrometheiTests` and exclude the long tests.

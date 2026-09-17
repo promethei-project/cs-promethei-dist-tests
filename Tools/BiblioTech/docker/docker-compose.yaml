@@ -1,6 +1,6 @@
 services:
   bibliotech-discordbot:
-    image: thatbenbierens/archivist-discordbot:initial
+    image: thatbenbierens/promethei-discordbot:initial
     environment:
       - TOKEN=tokenplz
       - SERVERNAME=ThatBen's server

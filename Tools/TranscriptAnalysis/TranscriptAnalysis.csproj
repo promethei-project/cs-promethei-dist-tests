@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\OverwatchTranscript\OverwatchTranscript.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistPlugin\ArchivistPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiPlugin\PrometheiPlugin.csproj" />
   </ItemGroup>
 
 </Project>
