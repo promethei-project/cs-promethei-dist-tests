@@ -9,7 +9,7 @@ namespace PrometheiPlugin
         public string? NameOverride { get; set; }
         public ILocation Location { get; set; } = KnownLocations.UnspecifiedLocation;
         public PrometheiLogLevel LogLevel { get; set; }
-        public PrometheiLogCustomTopics? CustomTopics { get; set; } = new PrometheiLogCustomTopics(PrometheiLogLevel.Info, PrometheiLogLevel.Warn);
+        public PrometheiLogCustomTopics? CustomTopics { get; set; } = new PrometheiLogCustomTopics(PrometheiLogLevel.Trace, PrometheiLogLevel.Warn, PrometheiLogLevel.Trace);
         public ByteSize? StorageQuota { get; set; }
         public bool MetricsEnabled { get; set; } = true;
         public MarketplaceInitialConfig? MarketplaceConfig { get; set; }
