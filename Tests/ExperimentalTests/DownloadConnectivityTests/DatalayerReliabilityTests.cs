@@ -1,6 +1,6 @@
-using ArchivistClient;
-using ArchivistPlugin;
-using ArchivistTests;
+using PrometheiClient;
+using PrometheiPlugin;
+using PrometheiTests;
 using FileUtils;
 using KubernetesWorkflow;
 using NUnit.Framework;
@@ -36,33 +36,33 @@ namespace ExperimentalTests.DownloadConnectivityTests
             // server1 (~23GB avail) carries the test runner (16Gi request) and
             // the bootstrap node; server2 (~14GB avail, desktop residents)
             // carries the uploader (0.36GB x peers) plus its downloader share.
-            // Split fraction is settable via ARCHIVIST_SERVER1_FRACTION (default
+            // Split fraction is settable via PROMETHEI_SERVER1_FRACTION (default
             // 0.5 = even by count) so placement can be sized to measured node
             // budgets without rebuilding the harness image.
             // Both named locations are REQUIRED for this experiment; fail fast
             // rather than risk a packed single-node run.
             var loc1 = RequireLocation("ubuntu-server1");
             var loc2 = RequireLocation("ubuntu-server2");
-            var server1Fraction = double.Parse(EnvVar.GetOrDefault("ARCHIVIST_SERVER1_FRACTION", "0.5"));
+            var server1Fraction = double.Parse(EnvVar.GetOrDefault("PROMETHEI_SERVER1_FRACTION", "0.5"));
 
             var file = GenerateTestFile(fileSizeMb.MB());
-            var uploader = StartArchivist(n =>
+            var uploader = StartPromethei(n =>
             {
-                SetupArchivist(n, "uploader");
+                SetupPromethei(n, "uploader");
                 n.At(loc1);
             });
 
             var onServer1 = (int)Math.Round(numDownloaders * server1Fraction);
             if (numDownloaders > 1 && onServer1 > 0 && onServer1 < numDownloaders)
             {
-                var group1 = StartArchivist(onServer1, n =>
+                var group1 = StartPromethei(onServer1, n =>
                 {
-                    SetupArchivist(n, "downloader");
+                    SetupPromethei(n, "downloader");
                     n.At(loc1);
                 });
-                var group2 = StartArchivist(numDownloaders - onServer1, n =>
+                var group2 = StartPromethei(numDownloaders - onServer1, n =>
                 {
-                    SetupArchivist(n, "downloader");
+                    SetupPromethei(n, "downloader");
                     n.At(loc2);
                 });
                 var downloaders = group1.Concat(group2).ToArray();
@@ -70,9 +70,9 @@ namespace ExperimentalTests.DownloadConnectivityTests
             }
             else
             {
-                var downloaders = StartArchivist(numDownloaders, n =>
+                var downloaders = StartPromethei(numDownloaders, n =>
                 {
-                    SetupArchivist(n, "downloader");
+                    SetupPromethei(n, "downloader");
                     n.At(loc1);
                 }).ToArray();
                 await RunDownloads(uploader, file, downloaders);
@@ -87,25 +87,25 @@ namespace ExperimentalTests.DownloadConnectivityTests
             return locations.Get(kubeNodeName);
         }
 
-        private static void SetupArchivist(IArchivistSetup n, string name)
+        private static void SetupPromethei(IPrometheiSetup n, string name)
         {
             // Log-level A/B knob: allow overriding BlockExchange/DiscV5 topic
             // level to Warn to separate tracing overhead from copy cost in
             // throughput measurements.
-            var topicLevel = EnvVar.GetOrDefault("ARCHIVIST_TOPIC_LOG_LEVEL", "Trace") == "Warn"
-                ? ArchivistLogLevel.Warn : ArchivistLogLevel.Trace;
-            n.WithName(name).WithLogLevel(ArchivistLogLevel.Warn,
-                new ArchivistLogCustomTopics(topicLevel, ArchivistLogLevel.Warn, topicLevel));
+            var topicLevel = EnvVar.GetOrDefault("PROMETHEI_TOPIC_LOG_LEVEL", "Trace") == "Warn"
+                ? PrometheiLogLevel.Warn : PrometheiLogLevel.Trace;
+            n.WithName(name).WithLogLevel(PrometheiLogLevel.Warn,
+                new PrometheiLogCustomTopics(topicLevel, PrometheiLogLevel.Warn, topicLevel));
             // Fetch-order A/B knob: applies to downloaders (the fetch side)
             // only; the uploader never fetches in this test.
-            var fetchOrder = EnvVar.GetOrDefault("ARCHIVIST_FETCH_ORDER", "");
+            var fetchOrder = EnvVar.GetOrDefault("PROMETHEI_FETCH_ORDER", "");
             if (!string.IsNullOrEmpty(fetchOrder) && name == "downloader")
             {
                 n.WithFetchOrder(fetchOrder);
             }
         }
 
-        private static async Task RunDownloads(IArchivistNode uploader, TrackedFile file, IArchivistNode[] downloaders)
+        private static async Task RunDownloads(IPrometheiNode uploader, TrackedFile file, IPrometheiNode[] downloaders)
         {
             var cid = uploader.UploadFile(file);
 
@@ -118,21 +118,21 @@ namespace ExperimentalTests.DownloadConnectivityTests
             Assert.That(downloadTasks.All(t => !t.IsFaulted));
         }
 
-        protected override void OnBootstrapNodeSetup(IArchivistSetup setup)
+        protected override void OnBootstrapNodeSetup(IPrometheiSetup setup)
         {
             setup.At(RequireLocation("ubuntu-server1"));
         }
 
         public class TransferPlan
         {
-            public IArchivistNode Uploader { get; set; } = null!;
+            public IPrometheiNode Uploader { get; set; } = null!;
             public ContentId Cid { get; set; } = null!;
             public List<DownloaderPlan> Downloaders { get; } = new List<DownloaderPlan>();
         }
 
         public class DownloaderPlan
         {
-            public IArchivistNode Node { get; set; } = null!;
+            public IPrometheiNode Node { get; set; } = null!;
             public List<TransferPlan> TransferPlans { get; } = new List<TransferPlan>();
         }
 
@@ -188,19 +188,19 @@ namespace ExperimentalTests.DownloadConnectivityTests
         {
             var loc1 = RequireLocation("ubuntu-server1");
             var loc2 = RequireLocation("ubuntu-server2");
-            var server1Fraction = double.Parse(EnvVar.GetOrDefault("ARCHIVIST_SERVER1_FRACTION", "0.5"));
+            var server1Fraction = double.Parse(EnvVar.GetOrDefault("PROMETHEI_SERVER1_FRACTION", "0.5"));
 
             var plans = new List<TransferPlan>();
             var onServer1 = Math.Min(Math.Max((int)Math.Round(numDatasets * server1Fraction), 1), numDatasets - 1);
             var onServer2 = numDatasets - onServer1;
-            var group1Uploaders = StartArchivist(onServer1, n =>
+            var group1Uploaders = StartPromethei(onServer1, n =>
             {
-                SetupArchivist(n, "uploader");
+                SetupPromethei(n, "uploader");
                 n.At(loc1);
             });
-            var group2Uploaders = StartArchivist(onServer2, n =>
+            var group2Uploaders = StartPromethei(onServer2, n =>
             {
-                SetupArchivist(n, "uploader");
+                SetupPromethei(n, "uploader");
                 n.At(loc2);
             });
             var uploaders = group1Uploaders.Concat(group2Uploaders).ToArray();
@@ -226,14 +226,14 @@ namespace ExperimentalTests.DownloadConnectivityTests
 
             var dlOnServer1 = (int)Math.Round(allDownloaderPlans.Length * server1Fraction);
             var dlOnServer2 = allDownloaderPlans.Length - dlOnServer1;
-            var dlGroup1 = StartArchivist(dlOnServer1, n =>
+            var dlGroup1 = StartPromethei(dlOnServer1, n =>
             {
-                SetupArchivist(n, "downloader");
+                SetupPromethei(n, "downloader");
                 n.At(loc1);
             });
-            var dlGroup2 = StartArchivist(dlOnServer2, n =>
+            var dlGroup2 = StartPromethei(dlOnServer2, n =>
             {
-                SetupArchivist(n, "downloader");
+                SetupPromethei(n, "downloader");
                 n.At(loc2);
             });
             var nodes = dlGroup1.Concat(dlGroup2).ToArray();
