@@ -13,13 +13,13 @@
     <ProjectReference Include="..\..\Framework\DiscordRewards\DiscordRewards.csproj" />
     <ProjectReference Include="..\..\Framework\FileUtils\FileUtils.csproj" />
     <ProjectReference Include="..\..\Framework\Utils\Utils.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistClient\ArchivistClient.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistContractsPlugin\ArchivistContractsPlugin.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistDiscordBotPlugin\ArchivistDiscordBotPlugin.csproj" />
-    <ProjectReference Include="..\..\ProjectPlugins\ArchivistPlugin\ArchivistPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiClient\PrometheiClient.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiContractsPlugin\PrometheiContractsPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiDiscordBotPlugin\PrometheiDiscordBotPlugin.csproj" />
+    <ProjectReference Include="..\..\ProjectPlugins\PrometheiPlugin\PrometheiPlugin.csproj" />
     <ProjectReference Include="..\..\ProjectPlugins\GethPlugin\GethPlugin.csproj" />
     <ProjectReference Include="..\..\ProjectPlugins\MetricsPlugin\MetricsPlugin.csproj" />
-    <ProjectReference Include="..\ArchivistReleaseTests\ArchivistReleaseTests.csproj" />
+    <ProjectReference Include="..\PrometheiReleaseTests\PrometheiReleaseTests.csproj" />
     <ProjectReference Include="..\DistTestCore\DistTestCore.csproj" />
   </ItemGroup>
 </Project>
