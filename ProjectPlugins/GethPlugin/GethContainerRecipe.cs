@@ -58,7 +58,7 @@ namespace GethPlugin
                 var bootPubKey = config.BootstrapNode.PublicKey;
                 var bootIp = config.BootstrapNode.IpAddress;
                 var bootPort = config.BootstrapNode.Port;
-                var bootstrapArg = $" --bootnodes enode://{bootPubKey}@{bootIp}:{bootPort}";
+                var bootstrapArg = $" --bootnodes enode://{bootPubKey}@{bootIp}:{bootPort}?discport={discovery.Number}";
                 args += bootstrapArg;
             }
             if (config.IsPublicTestNet != null)
@@ -81,7 +81,7 @@ namespace GethPlugin
 
         private Port CreateDiscoveryPort(GethStartupConfig config)
         {
-            if (config.IsPublicTestNet == null) return AddInternalPort(DiscoveryPortTag);
+            if (config.IsPublicTestNet == null) return AddInternalPort(DiscoveryPortTag, PortProtocol.UDP);
 
             return AddExposedPort(config.IsPublicTestNet.DiscoveryPort, DiscoveryPortTag, PortProtocol.UDP);
         }

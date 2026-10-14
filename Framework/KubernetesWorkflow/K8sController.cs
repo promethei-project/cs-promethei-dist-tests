@@ -197,7 +197,9 @@ namespace KubernetesWorkflow
             if (hostnameKey != null)
             {
                 var hostnameValue = i.Metadata.Labels[hostnameKey];
-                return new K8sNodeLabel(hostnameKey, hostnameValue);
+                var internalIp = i.Status.Addresses
+                    .FirstOrDefault(a => a.Type == "InternalIP")?.Address ?? "";
+                return new K8sNodeLabel(hostnameKey, hostnameValue, i.Metadata.Name, internalIp);
             }
             return null;
         }
@@ -394,6 +396,7 @@ namespace KubernetesWorkflow
                             PriorityClassName = GetPriorityClassName(containerRecipes),
                             Affinity = CreatePodAffinity(containerRecipes),
                             NodeSelector = CreateNodeSelector(location),
+                            TopologySpreadConstraints = CreateTopologySpreadConstraints(containerRecipes),
                             Containers = CreateDeploymentContainers(containerRecipes),
                             Volumes = CreateVolumes(containerRecipes)
                         }
@@ -416,11 +419,130 @@ namespace KubernetesWorkflow
         private IDictionary<string, string> CreateNodeSelector(ILocation location)
         {
             var nodeLabel = GetNodeLabelForLocation(location);
+            if (nodeLabel == null)
+            {
+                // Default placement: distribute across the cluster by live
+                // available memory (kube-scheduler cannot see host-level
+                // workloads). Weighted round-robin so pods interleave
+                // proportionally instead of filling one node first.
+                nodeLabel = GetResourceAwareNode();
+            }
             if (nodeLabel == null) return new Dictionary<string, string>();
 
             return new Dictionary<string, string>
             {
                 { nodeLabel.Key, nodeLabel.Value }
+            };
+        }
+
+        private K8sNodeLabel? GetResourceAwareNode()
+        {
+            var nodes = GetEligibleNodes();
+            if (nodes.Length == 0)
+            {
+                log.Log("Resource-aware placement: no eligible nodes - leaving placement to the scheduler");
+                return null;
+            }
+
+            var weights = nodes.Select(n => GetAvailableMemoryBytes(n)).ToArray();
+            if (weights.All(w => w <= 0))
+            {
+                log.Log("Resource-aware placement: kubelet stats unavailable on all nodes - leaving placement to the scheduler");
+                return null;
+            }
+
+            var idx = cluster.WeightedRoundRobinNext(nodes.Select(n => n.NodeName).ToArray(), weights);
+            return nodes[idx];
+        }
+
+        private K8sNodeLabel[] GetEligibleNodes()
+        {
+            return client.Run(c => c.ListNode()).Items
+                .Where(IsEligibleNode)
+                .Select(CreateNodeLabel)
+                .Where(n => n != null)
+                .Select(n => n!)
+                .ToArray();
+        }
+
+        private bool IsEligibleNode(V1Node node)
+        {
+            // A hard hostname nodeSelector must never contradict the pod's
+            // required affinity (allow-tests-pods NotIn "false") or the pod
+            // stays Pending forever.
+            if (node.Spec.Unschedulable == true) return false;
+            if (node.Metadata.Labels.TryGetValue("allow-tests-pods", out var allow) && allow == "false")
+            {
+                return false;
+            }
+            var ready = (node.Status.Conditions.FirstOrDefault(c => c.Type == "Ready")?.Status ?? "") == "True";
+            if (!ready) return false;
+            if (node.Spec.Taints != null
+                && node.Spec.Taints.Any(t => t.Effect == "NoSchedule" || t.Effect == "NoExecute"))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private long GetAvailableMemoryBytes(K8sNodeLabel node)
+        {
+            if (string.IsNullOrEmpty(node.NodeName)) return 0;
+
+            var cached = cluster.GetCachedNodeMemory(node.NodeName);
+            if (cached != null) return cached.Value;
+
+            try
+            {
+                // Go through the kube API node proxy so every auth mode the
+                // configured Kubernetes client supports (token, client cert,
+                // exec credential) keeps working - direct :10250 access does
+                // not. Requires RBAC get on nodes/proxy (or nodes/stats).
+                var resp = client.Run(c => c.ConnectGetNodeProxyWithPathAsync(
+                    node.NodeName, "stats/summary", "", CancellationToken.None)
+                    .GetAwaiter().GetResult());
+                using var reader = new StreamReader(resp);
+                using var doc = System.Text.Json.JsonDocument.Parse(reader.ReadToEnd());
+                var root = doc.RootElement;
+                long available = 0;
+                if (root.TryGetProperty("node", out var nodeSummary)
+                    && nodeSummary.TryGetProperty("memory", out var mem)
+                    && mem.TryGetProperty("availableBytes", out var avail))
+                {
+                    available = avail.GetInt64();
+                }
+                cluster.SetCachedNodeMemory(node.NodeName, available);
+                return available;
+            }
+            catch (Exception e)
+            {
+                log.Log($"Resource-aware placement: kubelet stats failed for node {node.NodeName}: {e.Message}");
+                return 0;
+            }
+        }
+
+        private IList<V1TopologySpreadConstraint> CreateTopologySpreadConstraints(ContainerRecipe[] containerRecipes)
+        {
+            // Spread each test's pods across cluster hosts using the shared
+            // deployid label stamped on every pod by the test lifecycle. The
+            // deployment-level selector would be a no-op (single replica).
+            var deployId = containerRecipes
+                .SelectMany(r => r.PodLabels.GetLabels())
+                .FirstOrDefault(kv => kv.Key == "deployid");
+            if (string.IsNullOrEmpty(deployId.Key)) return new List<V1TopologySpreadConstraint>();
+
+            return new List<V1TopologySpreadConstraint>
+            {
+                new V1TopologySpreadConstraint
+                {
+                    MaxSkew = 1,
+                    TopologyKey = "kubernetes.io/hostname",
+                    WhenUnsatisfiable = "ScheduleAnyway",
+                    LabelSelector = new V1LabelSelector
+                    {
+                        MatchLabels = new Dictionary<string, string> { { "deployid", deployId.Value } }
+                    }
+                }
             };
         }
 

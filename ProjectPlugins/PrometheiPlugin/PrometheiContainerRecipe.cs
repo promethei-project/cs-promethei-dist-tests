@@ -25,8 +25,8 @@ namespace PrometheiPlugin
 
         protected override void Initialize(StartupConfig startupConfig)
         {
-            SetResourcesRequest(milliCPUs: 100, memory: 100.MB());
-            //SetResourceLimits(milliCPUs: 4000, memory: 12.GB());
+            SetResourcesRequest(milliCPUs: 100, memory: 1.GB());
+            SetResourceLimits(new ContainerResourceSet(milliCPUs: 4000, memory: 4.GB()));
 
             SetSchedulingAffinity(notIn: "false");
             SetSystemCriticalPriority();
